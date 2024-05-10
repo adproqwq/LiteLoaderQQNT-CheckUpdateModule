@@ -1,25 +1,27 @@
 {
-  "name": "lltemplate-vite",
+  "name": "liteloaderqqnt-check-update-module",
   "version": "1.0.0",
-  "description": "A plugin template for LiteLoaderQQNT, powered by Vite & Typescript",
+  "description": "为LiteLoaderQQNT插件提供一个检测更新的API",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "npx eslint --fix src/**/* --ext .js,.ts",
-    "build": "npx electron-vite build"
+    "lint": "eslint --cache --fix ./src/**/*.{js,cjs,mjs,ts,jsx,tsx}",
+    "build": "electron-vite build"
   },
-  "author": "MisaLiu",
+  "author": "Adpro",
   "license": "GPL-3.0-only",
   "devDependencies": {
-    "@electron-toolkit/eslint-config-ts": "^1.0.1",
+    "@electron-toolkit/eslint-config-ts": "^2.0.0",
     "@electron-toolkit/tsconfig": "^1.0.1",
-    "@typescript-eslint/eslint-plugin": "^7.2.0",
-    "@typescript-eslint/parser": "^7.2.0",
-    "electron": "^29.1.4",
-    "electron-vite": "^2.1.0",
-    "eslint": "^8.57.0",
+    "@typescript-eslint/eslint-plugin": "^7.8.0",
+    "@typescript-eslint/parser": "^7.8.0",
+    "electron": "^30.0.2",
+    "electron-vite": "^2.2.0",
+    "eslint": "^9.2.0",
     "unplugin-zip-pack": "^1.0.1",
+    "vite": "^5.2.11",
     "vite-plugin-checker": "^0.6.4",
     "vite-plugin-cp": "^4.0.8"
-  }
+  },
+  "packageManager": "pnpm@9.1.0"
 }

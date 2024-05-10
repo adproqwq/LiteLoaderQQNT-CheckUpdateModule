@@ -1,7 +1,57 @@
 /// <reference types="vite/client" />
 
-declare namespace LLTemplate_Vite {
-  const greeting: (name: string) => void;
+declare interface ILiteLoaderManifestConfig {
+  manifest_version: 4;
+
+  type?: 'extension' | 'theme' | 'framework';
+
+  name: string;
+
+  slug: string;
+
+  description: string;
+
+  version: string;
+
+  icon?: string | null;
+
+  thumb?: string | null;
+
+  authors: ILiteLoaderManifestAuthorsConfig[];
+
+  dependencies?: string[];
+
+  platform: [
+    'win32'?,
+    'linux'?,
+    'darwin'?,
+  ];
+
+  injects: {
+    main?: string;
+
+    preload?: string;
+
+    renderer?: string;
+  };
+
+  repository?: {
+    repo: string;
+
+    branch: string;
+
+    release?: {
+      tag: string;
+
+      file?: string;
+    }
+  };
+}
+
+declare interface ILiteLoaderManifestAuthorsConfig {
+  name: string;
+
+  link: string;
 }
 
 declare namespace LiteLoader {
@@ -42,7 +92,7 @@ declare namespace LiteLoader {
   }
 
   interface ILiteLoaderPlugin {
-    manifest: object,
+    manifest: ILiteLoaderManifestConfig,
     incompatible: boolean,
     disabled: boolean,
     path: ILiteLoaderPluginPath
@@ -64,6 +114,7 @@ declare namespace LiteLoader {
     openPath: (path: string) => void,
     openExternal: (url: string) => void,
     disablePlugin: (slug: string) => void,
+    checkUpdate: (slug: string) => Promise<boolean | null>,
     config: ILiteLoaderAPIConfig,
   }
 
