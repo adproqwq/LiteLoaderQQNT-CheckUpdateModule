@@ -96,14 +96,9 @@ const registerCompMethod = () => {
 app.whenReady().then(async () => {
   registerCompMethod();
 
-  /*const isHaveUpdate = await LiteLoader.api.checkUpdate('LiteLoaderQQNT_CheckUpdateModule');
+  const isHaveUpdate = await LiteLoader.api.checkUpdate('LiteLoaderQQNT_CheckUpdateModule');
   if(isHaveUpdate){
     const updateResult = await LiteLoader.api.downloadUpdate('LiteLoaderQQNT_CheckUpdateModule');
-    if(updateResult) log('LiteLoaderQQNT_CheckUpdateModule has updated.');
-  }*/
-  const isHaveUpdate = await LiteLoader.api.checkUpdate('purlfy');
-  if(isHaveUpdate){
-    const updateResult = await LiteLoader.api.downloadUpdate('purlfy');
     if(updateResult) log('LiteLoaderQQNT_CheckUpdateModule has updated.');
   }
 });
