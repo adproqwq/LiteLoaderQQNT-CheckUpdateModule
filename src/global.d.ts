@@ -115,6 +115,7 @@ declare namespace LiteLoader {
     openExternal: (url: string) => void,
     disablePlugin: (slug: string) => void,
     checkUpdate: (slug: string) => Promise<boolean | null>,
+    downloadUpdate: (slug: string, url?: string) => Promise<boolean | null>,
     config: ILiteLoaderAPIConfig,
   }
 

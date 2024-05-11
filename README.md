@@ -4,23 +4,13 @@
 为 LiteLoaderQQNT 插件提供一个检测更新的API
 
 ## 使用方法
-在主进程中调用`LiteLoaderQQNT.api.checkUpdate`方法，需要传入`slug`作为参数。
 
-该方法会返回一个`boolean`类型或`null`的返回值。
-
-该方法是一个异步函数。
-
-举个栗子：
-```js
-// main.js
-if(await LiteLoaderQQNT.api.checkUpdate('your_slug')) console.log('存在更新版本');
-else if(await LiteLoaderQQNT.api.checkUpdate('your_slug') == null) console.log('manifest中未填写repository');
-else console.log('没有更新版本');
-```
+请查看[API文档](./API.md)
 
 ## 注意事项
 1. 本插件处于早期开发阶段，功能有限
 2. 目前：使用本插件，需要在`manifest.json`中提供`repository`字段，并保证填写信息正确
+3. `version`字段需要满足x.y.z的格式，且为纯数字
 
 ## 安装方法
 1. 下载最新 [发行版](https://github.com/adproqwq/LiteLoaderQQNT-CheckUpdateModule/releases) 并解压
