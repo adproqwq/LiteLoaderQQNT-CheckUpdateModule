@@ -5,7 +5,7 @@
   "name": "插件检测更新API",
   "slug": "LiteLoaderQQNT_CheckUpdateModule",
   "description": "为LiteLoaderQQNT插件提供一个检测更新的API",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "authors": [
     {
       "name": "Adpro",
@@ -24,7 +24,7 @@
     "repo": "adproqwq/LiteLoaderQQNT-CheckUpdateModule",
     "branch": "main",
     "release": {
-      "tag": "v1.1.0",
+      "tag": "v1.2.0",
       "file": "LiteLoaderQQNT_CheckUpdateModule.zip"
     }
   }

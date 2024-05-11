@@ -12,7 +12,15 @@ if(!fs.existsSync(LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data)
   });
 }
 
-globalThis.LiteLoader.api.checkUpdate = async (slug: string): Promise<boolean | null> => {
+const typesMap: Map<string, (currentVersion: string, targetVersion: string) => boolean> = new Map();
+
+globalThis.LiteLoader.api.registerCompFunc = (type: string, compFunc: (currentVersion: string, targetVersion: string) => boolean) => {
+  typesMap.set(type, compFunc);
+};
+
+globalThis.LiteLoader.api.checkUpdate = async (slug: string, type?: string): Promise<boolean | null> => {
+  type = type ? type : 'semVer';
+
   const targetPluginManifest = await LiteLoader.plugins[slug].manifest;
 
   if(!targetPluginManifest.repository){
@@ -20,20 +28,14 @@ globalThis.LiteLoader.api.checkUpdate = async (slug: string): Promise<boolean | 
     return null;
   }
   else{
+    const compFunc = typesMap.get(type);
+    if(!compFunc) return false;
+
     const currentVer = targetPluginManifest.version;
-    const currentVersionNameArray: (string | number)[] = currentVer.split('.');
-    for(let i = 0;i < currentVersionNameArray.length;i++){
-      currentVersionNameArray[i] = Number(currentVersionNameArray[i]);
-    }
     const githubRepoManifest: ILiteLoaderManifestConfig = await (await fetch(`https://raw.gitmirror.com/${targetPluginManifest.repository.repo}/${targetPluginManifest.repository.branch}/manifest.json`)).json();
-    const repoVersionNameArray: (string | number)[] = githubRepoManifest.version.split('.');
-    for(let i = 0;i < repoVersionNameArray.length;i++){
-      repoVersionNameArray[i] = Number(repoVersionNameArray[i]);
-    }
-    for(let i = 0;i < currentVersionNameArray.length;i++){
-      if(currentVersionNameArray[i] < repoVersionNameArray[i]) return true;
-    }
-    return false;
+    const targetVer = githubRepoManifest.version;
+
+    return compFunc(currentVer, targetVer);
   }
 };
 
@@ -69,10 +71,39 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
   }
 };
 
+const registerCompMethod = () => {
+  LiteLoader.api.registerCompFunc('increase', (currentVer, targetVer): boolean => {
+    if(Number(currentVer) < Number(targetVer)) return true;
+    else return false;
+  });
+
+  LiteLoader.api.registerCompFunc('semVer', (currentVer, targetVer): boolean => {
+    const currentVersionSplitedArray: (string | number)[] = currentVer.split('.');
+    for(let i = 0;i < currentVersionSplitedArray.length;i++){
+      currentVersionSplitedArray[i] = Number(currentVersionSplitedArray[i]);
+    }
+    const targetVersionSplitedArray: (string | number)[] = targetVer.split('.');
+    for(let i = 0;i < targetVersionSplitedArray.length;i++){
+      targetVersionSplitedArray[i] = Number(targetVersionSplitedArray[i]);
+    }
+    for(let i = 0;i < targetVersionSplitedArray.length;i++){
+      if(currentVersionSplitedArray[i] < targetVersionSplitedArray[i]) return true;
+    }
+    return false;
+  });
+};
+
 app.whenReady().then(async () => {
-  const isHaveUpdate = await LiteLoader.api.checkUpdate('LiteLoaderQQNT_CheckUpdateModule');
+  registerCompMethod();
+
+  /*const isHaveUpdate = await LiteLoader.api.checkUpdate('LiteLoaderQQNT_CheckUpdateModule');
   if(isHaveUpdate){
     const updateResult = await LiteLoader.api.downloadUpdate('LiteLoaderQQNT_CheckUpdateModule');
+    if(updateResult) log('LiteLoaderQQNT_CheckUpdateModule has updated.');
+  }*/
+  const isHaveUpdate = await LiteLoader.api.checkUpdate('purlfy');
+  if(isHaveUpdate){
+    const updateResult = await LiteLoader.api.downloadUpdate('purlfy');
     if(updateResult) log('LiteLoaderQQNT_CheckUpdateModule has updated.');
   }
 });

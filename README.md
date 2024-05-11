@@ -8,9 +8,8 @@
 请查看[API文档](./API.md)
 
 ## 注意事项
-1. 本插件处于早期开发阶段，功能有限
+1. 本插件处于早期开发阶段，变化速度较快。请随时留意。
 2. 目前：使用本插件，需要在`manifest.json`中提供`repository`字段，并保证填写信息正确
-3. `version`字段需要满足x.y.z的格式，且为纯数字
 
 ## 安装方法
 1. 下载最新 [发行版](https://github.com/adproqwq/LiteLoaderQQNT-CheckUpdateModule/releases) 并解压
