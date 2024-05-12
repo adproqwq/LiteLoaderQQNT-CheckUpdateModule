@@ -22,6 +22,8 @@ globalThis.LiteLoader.api.registerCompFunc = (type: string, compFunc: (currentVe
 };
 
 globalThis.LiteLoader.api.checkUpdate = async (slug: string, type?: string): Promise<boolean | null> => {
+  log('checkUpdate starts');
+
   type = type ? type : 'semVer';
 
   const targetPluginManifest = await LiteLoader.plugins[slug].manifest;
@@ -43,6 +45,8 @@ globalThis.LiteLoader.api.checkUpdate = async (slug: string, type?: string): Pro
 };
 
 globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): Promise<boolean | null> => {
+  log('downloadUpdate starts');
+
   const targetPluginManifest = await LiteLoader.plugins[slug].manifest;
   const remoteManifest: ILiteLoaderManifestConfig = await (await fetch(`${githubRawMirror}${targetPluginManifest.repository!.repo}/${targetPluginManifest.repository!.branch}/manifest.json`)).json();
 
@@ -54,8 +58,8 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
   url = url ?
     url :
     (targetPluginManifest.repository.release && targetPluginManifest.repository.release.file ?
-      url = `${githubReleaseMirror}https://github.com/${targetPluginManifest.repository.repo}/releases/download/${remoteManifest!.repository!.release!.tag}/${remoteManifest!.repository!.release!.file}` :
-      url = `${githubReleaseMirror}https://github.com/${targetPluginManifest.repository.repo}/archive/refs/heads/${targetPluginManifest.repository.branch}.zip`
+      `${githubReleaseMirror}https://github.com/${targetPluginManifest.repository.repo}/releases/download/${remoteManifest!.repository!.release!.tag}/${remoteManifest!.repository!.release!.file}` :
+      `${githubReleaseMirror}https://github.com/${targetPluginManifest.repository.repo}/archive/refs/heads/${targetPluginManifest.repository.branch}.zip`
     );
 
   const splitedUrl = url.split('/');
@@ -67,6 +71,7 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
     const zip = new AdmZip(`${LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data}/${zipName}`);
     zip.extractAllTo(`${LiteLoader.plugins[slug].path.plugin}/`, true);
     fs.unlinkSync(`${LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data}/${zipName}`);
+    log('Update successfully');
     return true;
   } catch(err){
     logError(`Download update zip failed. Error log: ${err}`);
