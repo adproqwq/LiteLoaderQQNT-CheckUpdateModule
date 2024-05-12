@@ -4,7 +4,7 @@ import { finished } from 'node:stream/promises';
 import { ReadableStream } from 'node:stream/web';
 import AdmZip from 'adm-zip';
 import { log, logError } from '../utils/log';
-import { app } from 'electron';
+import { BrowserWindow, app, dialog } from 'electron';
 
 if(!fs.existsSync(LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data)){
   fs.mkdir(LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data, (err) => {
@@ -102,6 +102,20 @@ app.whenReady().then(async () => {
   const isHaveUpdate = await LiteLoader.api.checkUpdate('LiteLoaderQQNT_CheckUpdateModule');
   if(isHaveUpdate){
     const updateResult = await LiteLoader.api.downloadUpdate('LiteLoaderQQNT_CheckUpdateModule');
-    if(updateResult) log('LiteLoaderQQNT_CheckUpdateModule has updated.');
+    if(updateResult){
+      dialog.showMessageBox(new BrowserWindow(), {
+        title: '插件已更新，需要重启',
+        message: '插件检测更新API 已更新，需要重启QQ',
+        type: 'warning',
+        buttons: ['现在重启', '稍后自行重启'],
+        cancelId: 1,
+        defaultId: 0,
+      }).then((c) => {
+        if(c.response == 0){
+          app.relaunch();
+          app.exit();
+        }
+      });
+    }
   }
 });
