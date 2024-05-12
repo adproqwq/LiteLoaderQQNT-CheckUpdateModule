@@ -12,6 +12,9 @@ if(!fs.existsSync(LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data)
   });
 }
 
+const githubRawMirror = 'https://raw.gitmirror.com/';
+const githubReleaseMirror = 'https://mirror.ghproxy.com/';
+
 const typesMap: Map<string, (currentVersion: string, targetVersion: string) => boolean> = new Map();
 
 globalThis.LiteLoader.api.registerCompFunc = (type: string, compFunc: (currentVersion: string, targetVersion: string) => boolean) => {
@@ -32,8 +35,8 @@ globalThis.LiteLoader.api.checkUpdate = async (slug: string, type?: string): Pro
     if(!compFunc) return false;
 
     const currentVer = targetPluginManifest.version;
-    const githubRepoManifest: ILiteLoaderManifestConfig = await (await fetch(`https://raw.gitmirror.com/${targetPluginManifest.repository.repo}/${targetPluginManifest.repository.branch}/manifest.json`)).json();
-    const targetVer = githubRepoManifest.version;
+    const remoteManifest: ILiteLoaderManifestConfig = await (await fetch(`${githubRawMirror}${targetPluginManifest.repository.repo}/${targetPluginManifest.repository.branch}/manifest.json`)).json();
+    const targetVer = remoteManifest.version;
 
     return compFunc(currentVer, targetVer);
   }
@@ -41,7 +44,7 @@ globalThis.LiteLoader.api.checkUpdate = async (slug: string, type?: string): Pro
 
 globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): Promise<boolean | null> => {
   const targetPluginManifest = await LiteLoader.plugins[slug].manifest;
-  const githubRepoManifest: ILiteLoaderManifestConfig = await (await fetch(`https://raw.gitmirror.com/${targetPluginManifest.repository!.repo}/${targetPluginManifest.repository!.branch}/manifest.json`)).json();
+  const remoteManifest: ILiteLoaderManifestConfig = await (await fetch(`${githubRawMirror}${targetPluginManifest.repository!.repo}/${targetPluginManifest.repository!.branch}/manifest.json`)).json();
 
   if(!targetPluginManifest.repository){
     logError(`No repository is found in the manifest of ${slug}`);
@@ -51,8 +54,8 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
   url = url ?
     url :
     (targetPluginManifest.repository.release && targetPluginManifest.repository.release.file ?
-      url = `https://mirror.ghproxy.com/https://github.com/${targetPluginManifest.repository.repo}/releases/download/${githubRepoManifest!.repository!.release!.tag}/${githubRepoManifest!.repository!.release!.file}` :
-      url = `https://mirror.ghproxy.com/https://github.com/${targetPluginManifest.repository.repo}/archive/refs/heads/${targetPluginManifest.repository.branch}.zip`
+      url = `${githubReleaseMirror}https://github.com/${targetPluginManifest.repository.repo}/releases/download/${remoteManifest!.repository!.release!.tag}/${remoteManifest!.repository!.release!.file}` :
+      url = `${githubReleaseMirror}https://github.com/${targetPluginManifest.repository.repo}/archive/refs/heads/${targetPluginManifest.repository.branch}.zip`
     );
 
   const splitedUrl = url.split('/');
