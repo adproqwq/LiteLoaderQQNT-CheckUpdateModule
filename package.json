@@ -1,6 +1,6 @@
 {
   "name": "liteloaderqqnt-check-update-module",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "description": "为LiteLoaderQQNT插件提供一个检测更新的API",
   "main": "index.js",
   "scripts": {
@@ -24,7 +24,7 @@
     "vite-plugin-checker": "^0.6.4",
     "vite-plugin-cp": "^4.0.8"
   },
-  "packageManager": "pnpm@9.1.0",
+  "packageManager": "pnpm@9.1.1",
   "dependencies": {
     "adm-zip": "^0.5.12"
   }

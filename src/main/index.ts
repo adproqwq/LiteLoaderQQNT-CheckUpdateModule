@@ -79,6 +79,22 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
   }
 };
 
+globalThis.LiteLoader.api.relaunchQQNT = (message: string, buttonTexts?: [positive: string, negative: string]) => {
+  dialog.showMessageBox(new BrowserWindow(), {
+    title: '插件已更新，需要重启',
+    message: message,
+    type: 'warning',
+    buttons: buttonTexts ? buttonTexts : ['现在重启', '稍后自行重启'],
+    cancelId: 1,
+    defaultId: 0,
+  }).then((c) => {
+    if(c.response == 0){
+      app.relaunch();
+      app.exit();
+    }
+  });
+};
+
 const registerCompMethod = () => {
   LiteLoader.api.registerCompFunc('increase', (currentVer, targetVer): boolean => {
     if(Number(currentVer) < Number(targetVer)) return true;
@@ -108,19 +124,7 @@ app.whenReady().then(async () => {
   if(isHaveUpdate){
     const updateResult = await LiteLoader.api.downloadUpdate('LiteLoaderQQNT_CheckUpdateModule');
     if(updateResult){
-      dialog.showMessageBox(new BrowserWindow(), {
-        title: '插件已更新，需要重启',
-        message: '插件检测更新API 已更新，需要重启QQ',
-        type: 'warning',
-        buttons: ['现在重启', '稍后自行重启'],
-        cancelId: 1,
-        defaultId: 0,
-      }).then((c) => {
-        if(c.response == 0){
-          app.relaunch();
-          app.exit();
-        }
-      });
+      LiteLoader.api.relaunchQQNT('插件检测更新API 插件更新完成，需要重启QQ');
     }
   }
 });
