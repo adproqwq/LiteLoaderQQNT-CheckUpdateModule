@@ -4,7 +4,6 @@
 - `checkUpdate`
 - `downloadUpdate`
 - `registerCompFunc`
-- `relaunchQQNT`
 
 如无特殊说明，本插件所有函数均暴露在主进程。
 
@@ -94,21 +93,3 @@ app.whenReady().then(() => {
 "version": "0" -> "version": "1"
 ```
 该种情况适用此比较方式。
-
-## relaunchQQNT
-
-该函数用于弹出消息框告知用户需要重启QQNT，并在用户给出正面反馈后，重启QQ。
-
-它接受如下的参数：
-
-`message`: `string` - 消息框显示的内容
-
-`buttonText`: `[positive: string, negative: string]` - 可选，不填则插件默认。接受一个长度为2的**字符串**数组，第1项为正面选项，即重启；第2项为负面选项，即不重启。
-
-它的返回值类型为：`void`
-
-使用方法：
-```js
-// main.js
-LiteLoader.api.relaunchQQNT('message', /*original*/['positive', 'negative']);
-```
