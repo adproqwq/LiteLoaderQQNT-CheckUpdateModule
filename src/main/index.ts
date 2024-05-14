@@ -79,7 +79,7 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
   }
 };
 
-const registerCompMethod = () => {
+const initCompFunc = () => {
   LiteLoader.api.registerCompFunc('increase', (currentVer, targetVer): boolean => {
     if(Number(currentVer) < Number(targetVer)) return true;
     else return false;
@@ -87,22 +87,16 @@ const registerCompMethod = () => {
 
   LiteLoader.api.registerCompFunc('semVer', (currentVer, targetVer): boolean => {
     const currentVersionSplitedArray: (string | number)[] = currentVer.split('.');
-    for(let i = 0;i < currentVersionSplitedArray.length;i++){
-      currentVersionSplitedArray[i] = Number(currentVersionSplitedArray[i]);
-    }
     const targetVersionSplitedArray: (string | number)[] = targetVer.split('.');
-    for(let i = 0;i < targetVersionSplitedArray.length;i++){
-      targetVersionSplitedArray[i] = Number(targetVersionSplitedArray[i]);
-    }
-    for(let i = 0;i < targetVersionSplitedArray.length;i++){
-      if(currentVersionSplitedArray[i] < targetVersionSplitedArray[i]) return true;
+    for(let i = 0, j = 0;i < currentVersionSplitedArray.length, j < targetVersionSplitedArray.length;i++, j++){
+      if(Number(currentVersionSplitedArray[i]) < Number(targetVersionSplitedArray[j])) return true;
     }
     return false;
   });
 };
 
 app.whenReady().then(async () => {
-  registerCompMethod();
+  initCompFunc();
 
   const isHaveUpdate = await LiteLoader.api.checkUpdate('LiteLoaderQQNT_CheckUpdateModule');
   if(isHaveUpdate){
