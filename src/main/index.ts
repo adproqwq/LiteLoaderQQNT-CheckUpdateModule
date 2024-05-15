@@ -14,6 +14,7 @@ if(!fs.existsSync(LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data)
 
 const githubRawMirror = 'https://raw.gitmirror.com/';
 const githubReleaseMirror = 'https://mirror.ghproxy.com/';
+const pluginSlug = 'LiteLoaderQQNT_CheckUpdateModule';
 
 const typesMap: Map<string, (currentVersion: string, targetVersion: string) => boolean> = new Map();
 
@@ -49,18 +50,22 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
 
   const targetPluginManifest = await LiteLoader.plugins[slug].manifest;
   const remoteManifest: ILiteLoaderManifestConfig = await (await fetch(`${githubRawMirror}${targetPluginManifest.repository!.repo}/${targetPluginManifest.repository!.branch}/manifest.json`)).json();
+  let isSourceCode = false;
 
   if(!targetPluginManifest.repository){
     logError(`No repository is found in the manifest of ${slug}`);
     return null;
   }
 
-  url = url ?
-    url :
-    (targetPluginManifest.repository.release && targetPluginManifest.repository.release.file ?
-      `${githubReleaseMirror}https://github.com/${targetPluginManifest.repository.repo}/releases/download/${remoteManifest!.repository!.release!.tag}/${remoteManifest!.repository!.release!.file}` :
-      `${githubReleaseMirror}https://github.com/${targetPluginManifest.repository.repo}/archive/refs/heads/${targetPluginManifest.repository.branch}.zip`
-    );
+  if(!url){
+    if(targetPluginManifest.repository.release && targetPluginManifest.repository.release.file){
+      url = `${githubReleaseMirror}https://github.com/${targetPluginManifest.repository.repo}/releases/download/${remoteManifest!.repository!.release!.tag}/${remoteManifest!.repository!.release!.file}`;
+    }
+    else{
+      url = `${githubReleaseMirror}https://github.com/${targetPluginManifest.repository.repo}/archive/refs/heads/${targetPluginManifest.repository.branch}.zip`;
+      isSourceCode = true;
+    }
+  }
 
   const splitedUrl = url.split('/');
   const zipName = splitedUrl[splitedUrl.length - 1];
@@ -69,7 +74,8 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
     const fileStream = fs.createWriteStream(`${LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data}/${zipName}`, { flags: 'w' });
     await finished(Readable.fromWeb(res.body! as ReadableStream<any>).pipe(fileStream));
     const zip = new AdmZip(`${LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data}/${zipName}`);
-    zip.extractAllTo(`${LiteLoader.plugins[slug].path.plugin}/`, true);
+    if(isSourceCode) zip.extractAllTo(`${LiteLoader.path.plugins}/`, true);
+    else zip.extractAllTo(`${LiteLoader.plugins[slug].path.plugin}/`, true);
     fs.unlinkSync(`${LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data}/${zipName}`);
     log('Update successfully');
     return true;
@@ -98,9 +104,9 @@ const initCompFunc = () => {
 app.whenReady().then(async () => {
   initCompFunc();
 
-  const isHaveUpdate = await LiteLoader.api.checkUpdate('LiteLoaderQQNT_CheckUpdateModule');
+  const isHaveUpdate = await LiteLoader.api.checkUpdate(pluginSlug);
   if(isHaveUpdate){
-    const updateResult = await LiteLoader.api.downloadUpdate('LiteLoaderQQNT_CheckUpdateModule');
+    const updateResult = await LiteLoader.api.downloadUpdate(pluginSlug);
     if(updateResult){
       dialog.showMessageBox(new BrowserWindow(), {
         title: '插件已更新，需要重启',
