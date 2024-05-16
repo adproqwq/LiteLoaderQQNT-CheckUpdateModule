@@ -82,7 +82,13 @@ app.whenReady().then(() => {
 
 默认的比较方式。即语义化版本比较方式。
 
-详情请见[SemVer官网](https://semver.org/lang/zh-CN/)
+例：
+```text
+"version": "1.0.0" -> "version": "1.0.1"
+```
+该种情况适用此比较方式。
+
+更多信息请见[SemVer官网](https://semver.org/lang/zh-CN/)
 
 ### increase
 
