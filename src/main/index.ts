@@ -92,8 +92,8 @@ const initCompFunc = () => {
   });
 
   LiteLoader.api.registerCompFunc('semVer', (currentVer, targetVer): boolean => {
-    const currentVersionSplitedArray: (string | number)[] = currentVer.split('.');
-    const targetVersionSplitedArray: (string | number)[] = targetVer.split('.');
+    const currentVersionSplitedArray: string[] = currentVer.split('.');
+    const targetVersionSplitedArray: string[] = targetVer.split('.');
     for(let i = 0, j = 0;i < currentVersionSplitedArray.length, j < targetVersionSplitedArray.length;i++, j++){
       if(Number(currentVersionSplitedArray[i]) < Number(targetVersionSplitedArray[j])) return true;
     }
