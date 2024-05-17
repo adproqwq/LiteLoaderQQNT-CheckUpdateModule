@@ -8,8 +8,8 @@
 请查看[API文档](./API.md)
 
 ## 注意事项
-1. 使用本插件，**必须**在`manifest.json`中提供`repository`字段，并保证填写信息正确。如不想将源码开源，可以只将manifest上传github。
-2. 本插件理论适配Windows、Linux、MacOS，但仅有Windows经过测试，Linux、MacOS如不能正常使用，请提Issue。
+1. 使用本插件，**必须**在`manifest.json`中提供`repository`字段，并保证填写信息正确。如不想将源码开源，可以只将manifest上传github，然后在调用`downloadUpdate`时指定下载链接即可。
+2. 本插件理论适配Windows、Linux、MacOS，但仅有Windows经过实机测试，Linux、MacOS如不能正常使用，请提Issue。
 
 ## 安装方法
 1. 下载最新 [发行版](https://github.com/adproqwq/LiteLoaderQQNT-CheckUpdateModule/releases) 并解压
