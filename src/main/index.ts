@@ -71,14 +71,20 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
   const zipName = splitedUrl[splitedUrl.length - 1];
   try{
     const res = await fetch(url);
-    const fileStream = fs.createWriteStream(`${LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data}/${zipName}`, { flags: 'w' });
-    await finished(Readable.fromWeb(res.body! as ReadableStream<any>).pipe(fileStream));
-    const zip = new AdmZip(`${LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data}/${zipName}`);
-    if(isSourceCode) zip.extractAllTo(`${LiteLoader.path.plugins}/`, true);
-    else zip.extractAllTo(`${LiteLoader.plugins[slug].path.plugin}/`, true);
-    fs.unlinkSync(`${LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data}/${zipName}`);
-    log('Update successfully');
-    return true;
+    if(res.status === 200){
+      const fileStream = fs.createWriteStream(`${LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data}/${zipName}`, { flags: 'w' });
+      await finished(Readable.fromWeb(res.body! as ReadableStream<any>).pipe(fileStream));
+      const zip = new AdmZip(`${LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data}/${zipName}`);
+      if(isSourceCode) zip.extractAllTo(`${LiteLoader.path.plugins}/`, true);
+      else zip.extractAllTo(`${LiteLoader.plugins[slug].path.plugin}/`, true);
+      fs.unlinkSync(`${LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data}/${zipName}`);
+      log('Update successfully');
+      return true;
+    }
+    else{
+      logError('Github proxy has some wrong. Retry later.');
+      return false;
+    }
   } catch(err){
     logError(`Download update zip failed. Error log: ${err}`);
     return false;
