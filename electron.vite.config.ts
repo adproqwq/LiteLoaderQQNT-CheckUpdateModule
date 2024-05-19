@@ -54,7 +54,10 @@ export default defineConfig({
         },
       }),
       viteCp({
-        targets: [{ src: './manifest.json', dest: 'dist' }],
+        targets: [
+          { src: './manifest.json', dest: 'dist' },
+          { src: './src/assets', dest: 'dist/assets'},
+        ],
       }),
       viteZipPack({
         in: OUTPUT_DIR,
