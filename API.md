@@ -40,7 +40,7 @@ else console.log('没有更新版本');
 
 `slug`: `string` - 需要检测更新的插件的slug
 
-`url`: `string` - 可选。使用自行提供的下载链接，URL结尾必须为zip包名称。
+`url`: `string` - 可选。使用自行提供的下载链接
 
 它的返回值类型为：`boolean`或`null`
 
