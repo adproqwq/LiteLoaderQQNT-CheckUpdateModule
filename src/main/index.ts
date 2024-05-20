@@ -112,8 +112,10 @@ app.whenReady().then(async () => {
 
   const isHaveUpdate = await LiteLoader.api.checkUpdate(pluginSlug);
   if(isHaveUpdate){
+    log('The plugin has update.');
     const updateResult = await LiteLoader.api.downloadUpdate(pluginSlug);
     if(updateResult){
+      log('Update Successfully.');
       dialog.showMessageBox(new BrowserWindow(), {
         title: '插件已更新，需要重启',
         message: '插件检测更新API 插件已更新，需要重启',
