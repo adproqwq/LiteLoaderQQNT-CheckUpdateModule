@@ -8,7 +8,7 @@
 请查看[API文档](./API.md)
 
 ## 注意事项
-1. 使用本插件，**必须**在`manifest.json`中提供`repository`字段，并保证填写信息正确。如不想将源码开源，可以只将manifest上传github，然后在调用`downloadUpdate`时指定下载链接即可。
+1. 使用本插件，目标插件**必须**在`manifest.json`中提供`repository`字段，并保证填写信息正确。如不想将源码开源，可以只将manifest上传github，然后在调用`downloadUpdate`时指定下载链接即可。
 2. 本插件理论适配Windows、Linux、MacOS，但仅有Windows经过实机测试，Linux、MacOS如不能正常使用，请提Issue。
 3. 使用过程中产生的一切问题，请先确认是 本插件导致的 还是 依赖本插件的插件导致的，后者需要前往对应仓库进行反馈。
 
