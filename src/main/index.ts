@@ -5,6 +5,7 @@ import { ReadableStream } from 'node:stream/web';
 import AdmZip from 'adm-zip';
 import { log, logError } from '../utils/log';
 import { BrowserWindow, app, dialog } from 'electron';
+import outputChangeLogJs from '../utils/outputChangeLogJs';
 
 if(!fs.existsSync(LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data)){
   fs.mkdir(LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data, (err) => {
@@ -116,9 +117,12 @@ app.whenReady().then(async () => {
     const updateResult = await LiteLoader.api.downloadUpdate(pluginSlug);
     if(updateResult){
       log('Update successfully.');
-      dialog.showMessageBox(new BrowserWindow(), {
+      outputChangeLogJs();
+      const changeLogWindow = new BrowserWindow();
+      changeLogWindow.loadFile(`${LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.plugin}/assets/changeLog.html`);
+      dialog.showMessageBox(changeLogWindow, {
         title: '插件已更新，需要重启',
-        message: '插件检测更新API 插件已更新，需要重启',
+        message: '插件检测更新API 插件已更新，需要重启。更新日志在打开的窗口中。',
         type: 'warning',
         buttons: ['现在重启', '稍后自行重启'],
         cancelId: 1,
