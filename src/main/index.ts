@@ -7,15 +7,15 @@ import { log, logError } from '../utils/log';
 import { BrowserWindow, app, dialog } from 'electron';
 import outputChangeLogJs from '../utils/outputChangeLogJs';
 
-if(!fs.existsSync(LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data)){
-  fs.mkdir(LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data, (err) => {
-    if(err) throw err;
-  });
-}
-
 const githubRawMirror = 'https://raw.gitmirror.com/';
 const githubReleaseMirror = 'https://mirror.ghproxy.com/';
 const pluginSlug = 'LiteLoaderQQNT_CheckUpdateModule';
+
+if(!fs.existsSync(LiteLoader.plugins[pluginSlug].path.data)){
+  fs.mkdir(LiteLoader.plugins[pluginSlug].path.data, (err) => {
+    if(err) throw err;
+  });
+}
 
 const typesMap: Map<string, (currentVersion: string, targetVersion: string) => boolean> = new Map();
 
@@ -73,12 +73,12 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
   try{
     const res = await fetch(url);
     if(res.status === 200){
-      const fileStream = fs.createWriteStream(`${LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data}/${zipName}`, { flags: 'w' });
+      const fileStream = fs.createWriteStream(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`, { flags: 'w' });
       await finished(Readable.fromWeb(res.body! as ReadableStream<any>).pipe(fileStream));
-      const zip = new AdmZip(`${LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data}/${zipName}`);
+      const zip = new AdmZip(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
       if(isSourceCode) zip.extractAllTo(`${LiteLoader.path.plugins}/`, true);
       else zip.extractAllTo(`${LiteLoader.plugins[slug].path.plugin}/`, true);
-      fs.unlinkSync(`${LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.data}/${zipName}`);
+      fs.unlinkSync(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
       log('Update successfully');
       return true;
     }
@@ -119,7 +119,7 @@ app.whenReady().then(async () => {
       log('Update successfully.');
       outputChangeLogJs();
       const changeLogWindow = new BrowserWindow();
-      changeLogWindow.loadFile(`${LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.plugin}/assets/changeLog.html`);
+      changeLogWindow.loadFile(`${LiteLoader.plugins[pluginSlug].path.plugin}/assets/changeLog.html`);
       dialog.showMessageBox(changeLogWindow, {
         title: '插件已更新，需要重启',
         message: '插件检测更新API 插件已更新，需要重启。更新日志在打开的窗口中。',
