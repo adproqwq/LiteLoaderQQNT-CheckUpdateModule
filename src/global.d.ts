@@ -117,6 +117,7 @@ declare namespace LiteLoader {
     registerCompFunc: (type: string, compFunc: (currentVersion: string, targetVersion: string) => boolean) => void,
     checkUpdate: (slug: string, type?: string) => Promise<boolean | null>,
     downloadUpdate: (slug: string, url?: string) => Promise<boolean | null>,
+    showRelaunchDialog: (slug: string, showChangeLog?: boolean, changeLogFile?: string) => void,
     config: ILiteLoaderAPIConfig,
   }
 

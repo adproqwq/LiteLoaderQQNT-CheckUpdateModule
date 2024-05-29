@@ -4,6 +4,7 @@
 - `checkUpdate`
 - `downloadUpdate`
 - `registerCompFunc`
+- `showRelaunchDialog`
 
 如无特殊说明，本插件所有函数均暴露在主进程。
 
@@ -99,3 +100,23 @@ app.whenReady().then(() => {
 "version": "0" -> "version": "1"
 ```
 该种情况适用此比较方式。
+
+## showRelaunchDialog
+
+该函数用于更新后弹出重启弹窗，并展示更新日志，它接受以下的参数：
+
+`slug`: `string` - 需要展示更新日志的插件的slug
+
+`showChangeLog`: `boolean` - 可选。是否展示更新日志
+
+`changeLogFile`: `string` - 可选，只有在传入`showChangeLog`为`true`时有效。更新日志md文件的文件名，不填默认为`changeLog`
+
+它的返回值类型为：`void`
+
+使用方法：
+```js
+// main.js
+if(await LiteLoaderQQNT.api.downloadUpdate('your_slug', 'your_update_url(optional)')){
+  LiteLoaderQQNT.api.showRelaunchDialog('your_slug', true, 'your_changelog_file_name(optional)');
+}
+```

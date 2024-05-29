@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 
-export default () => {
-  const changeLogBuffer = fs.readFileSync(`${LiteLoader.plugins.LiteLoaderQQNT_CheckUpdateModule.path.plugin}/changeLog.md`, { encoding: 'utf-8' });
+export default (slug: string, changeLogFile: string) => {
+  const changeLogBuffer = fs.readFileSync(`${LiteLoader.plugins[slug].path.plugin}/${changeLogFile}.md`, { encoding: 'utf-8' });
   let changeLog = changeLogBuffer.toString();
 
   changeLog = changeLog.replaceAll('`', '\\`').replaceAll('$', '\\$');

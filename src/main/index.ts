@@ -92,6 +92,28 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
   }
 };
 
+globalThis.LiteLoader.api.showRelaunchDialog = (slug: string, showChangeLog?: boolean, changeLogFile?: string) => {
+  const relaunchWindow = new BrowserWindow();
+  if(showChangeLog){
+    outputChangeLogJs(slug, changeLogFile ? changeLogFile : 'changeLog');
+    relaunchWindow.loadFile(`${LiteLoader.plugins[pluginSlug].path.plugin}/assets/changeLog.html`);
+  }
+  const pluginName = LiteLoader.plugins[slug].manifest.name;
+  dialog.showMessageBox(relaunchWindow, {
+    title: '插件已更新，需要重启',
+    message: `${pluginName} 插件已更新，需要重启。更新日志在打开的窗口中。`,
+    type: 'warning',
+    buttons: ['现在重启', '稍后自行重启'],
+    cancelId: 1,
+    defaultId: 0,
+  }).then((c) => {
+    if(c.response == 0){
+      app.relaunch();
+      app.exit();
+    }
+  });
+};
+
 const initCompFunc = () => {
   LiteLoader.api.registerCompFunc('increase', (currentVer, targetVer): boolean => {
     if(Number(currentVer) < Number(targetVer)) return true;
@@ -117,22 +139,7 @@ app.whenReady().then(async () => {
     const updateResult = await LiteLoader.api.downloadUpdate(pluginSlug);
     if(updateResult){
       log('Update successfully.');
-      outputChangeLogJs();
-      const changeLogWindow = new BrowserWindow();
-      changeLogWindow.loadFile(`${LiteLoader.plugins[pluginSlug].path.plugin}/assets/changeLog.html`);
-      dialog.showMessageBox(changeLogWindow, {
-        title: '插件已更新，需要重启',
-        message: '插件检测更新API 插件已更新，需要重启。更新日志在打开的窗口中。',
-        type: 'warning',
-        buttons: ['现在重启', '稍后自行重启'],
-        cancelId: 1,
-        defaultId: 0,
-      }).then((c) => {
-        if(c.response == 0){
-          app.relaunch();
-          app.exit();
-        }
-      });
+      LiteLoader.api.showRelaunchDialog(pluginSlug, true);
     }
   }
 });
