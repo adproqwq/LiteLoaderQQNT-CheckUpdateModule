@@ -109,7 +109,7 @@ app.whenReady().then(() => {
 
 `showChangeLog`: `boolean` - 可选。是否展示更新日志
 
-`changeLogFile`: `string` - 可选，只有在传入`showChangeLog`为`true`时有效。更新日志md文件的文件名，不填默认为`changeLog`
+`changeLogFile`: `string` - 可选，只有在传入`showChangeLog`为`true`时有效。更新日志md文件的文件名，仅支持md格式，传入时**不需要**携带扩展名，不填默认为`changeLog`
 
 它的返回值类型为：`void`
 
