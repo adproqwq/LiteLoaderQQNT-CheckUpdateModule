@@ -93,25 +93,34 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
 };
 
 globalThis.LiteLoader.api.showRelaunchDialog = (slug: string, showChangeLog?: boolean, changeLogFile?: string) => {
-  const relaunchWindow = new BrowserWindow();
-  if(showChangeLog){
-    outputChangeLogJs(slug, changeLogFile ? changeLogFile : 'changeLog');
-    relaunchWindow.loadFile(`${LiteLoader.plugins[pluginSlug].path.plugin}/assets/changeLog.html`);
-  }
   const pluginName = LiteLoader.plugins[slug].manifest.name;
-  dialog.showMessageBox(relaunchWindow, {
+  const options: Electron.MessageBoxOptions = {
     title: '插件已更新，需要重启',
-    message: `${pluginName} 插件已更新，需要重启。更新日志在打开的窗口中。`,
+    message: `${pluginName} 插件已更新，需要重启。${showChangeLog ? '更新日志在打开的窗口中。' : ''}`,
     type: 'warning',
     buttons: ['现在重启', '稍后自行重启'],
     cancelId: 1,
     defaultId: 0,
-  }).then((c) => {
-    if(c.response == 0){
-      app.relaunch();
-      app.exit();
-    }
-  });
+  };
+  if(showChangeLog){
+    const relaunchWindow = new BrowserWindow();
+    outputChangeLogJs(slug, changeLogFile ? changeLogFile : 'changeLog');
+    relaunchWindow.loadFile(`${LiteLoader.plugins[pluginSlug].path.plugin}/assets/changeLog.html`);
+    dialog.showMessageBox(relaunchWindow, options).then((c) => {
+      if(c.response == 0){
+        app.relaunch();
+        app.exit();
+      }
+    });
+  }
+  else{
+    dialog.showMessageBox(options).then((c) => {
+      if(c.response == 0){
+        app.relaunch();
+        app.exit();
+      }
+    });
+  }
 };
 
 const initCompFunc = () => {

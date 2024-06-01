@@ -1,2 +1,1 @@
-1. 禁用 `PluginInstaller` 插件对于本插件的自动安装
-2. 新增`showRelaunchDialog`函数
+1. 当不展示更新日志时，不再打开新窗口
