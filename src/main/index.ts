@@ -6,16 +6,11 @@ import AdmZip from 'adm-zip';
 import { log, logError } from '../utils/log';
 import { BrowserWindow, app, dialog } from 'electron';
 import outputChangeLogJs from '../utils/outputChangeLogJs';
+import { config } from '../config/config';
 
 const githubRawMirror = 'https://raw.gitmirror.com/';
 const githubReleaseMirror = 'https://mirror.ghproxy.com/';
 const pluginSlug = 'LiteLoaderQQNT_CheckUpdateModule';
-
-if(!fs.existsSync(LiteLoader.plugins[pluginSlug].path.data)){
-  fs.mkdir(LiteLoader.plugins[pluginSlug].path.data, (err) => {
-    if(err) throw err;
-  });
-}
 
 const typesMap: Map<string, (currentVersion: string, targetVersion: string) => boolean> = new Map();
 
@@ -142,13 +137,16 @@ const initCompFunc = () => {
 app.whenReady().then(async () => {
   initCompFunc();
 
-  const isHaveUpdate = await LiteLoader.api.checkUpdate(pluginSlug);
-  if(isHaveUpdate){
-    log('The plugin has updated.');
-    const updateResult = await LiteLoader.api.downloadUpdate(pluginSlug);
-    if(updateResult){
-      log('Update successfully.');
-      LiteLoader.api.showRelaunchDialog(pluginSlug, true);
+  const userConfig = await LiteLoader.api.config.get(pluginSlug, config);
+  if(!userConfig.experiment.disable_auto_update){
+    const isHaveUpdate = await LiteLoader.api.checkUpdate(pluginSlug);
+    if(isHaveUpdate){
+      log('The plugin has updated.');
+      const updateResult = await LiteLoader.api.downloadUpdate(pluginSlug);
+      if(updateResult){
+        log('Update successfully.');
+        LiteLoader.api.showRelaunchDialog(pluginSlug, true);
+      }
     }
   }
 });
