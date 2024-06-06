@@ -11,6 +11,9 @@ export const onSettingWindowCreated = async (view: HTMLElement) => {
   if(userConfig.experiment.disable_auto_update){
     (view.querySelector('#disable_auto_update') as HTMLInputElement).setAttribute('is-active', '');
   }
+  if(userConfig.experiment.output_compFunc){
+    (view.querySelector('#output_compFunc') as HTMLInputElement).setAttribute('is-active', '');
+  }
 
   (view.querySelector('#disable_auto_update') as HTMLInputElement).addEventListener('click', async () => {
     if(userConfig.experiment.disable_auto_update){
@@ -21,6 +24,19 @@ export const onSettingWindowCreated = async (view: HTMLElement) => {
     else{
       (view.querySelector('#disable_auto_update') as HTMLInputElement).setAttribute('is-active', '');
       userConfig.experiment.disable_auto_update = true;
+      await LiteLoader.api.config.set(pluginSlug, userConfig);
+    }
+  });
+
+  (view.querySelector('#output_compFunc') as HTMLInputElement).addEventListener('click', async () => {
+    if(userConfig.experiment.output_compFunc){
+      (view.querySelector('#output_compFunc') as HTMLInputElement).removeAttribute('is-active');
+      userConfig.experiment.output_compFunc = false;
+      await LiteLoader.api.config.set(pluginSlug, userConfig);
+    }
+    else{
+      (view.querySelector('#output_compFunc') as HTMLInputElement).setAttribute('is-active', '');
+      userConfig.experiment.output_compFunc = true;
       await LiteLoader.api.config.set(pluginSlug, userConfig);
     }
   });

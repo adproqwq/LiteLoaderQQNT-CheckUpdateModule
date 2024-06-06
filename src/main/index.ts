@@ -138,6 +138,13 @@ app.whenReady().then(async () => {
   initCompFunc();
 
   const userConfig = await LiteLoader.api.config.get(pluginSlug, config);
+
+  if(userConfig.experiment.output_compFunc){
+    typesMap.forEach((_, types) => {
+      log(`${types} is registered.`);
+    });
+  }
+
   if(!userConfig.experiment.disable_auto_update){
     const isHaveUpdate = await LiteLoader.api.checkUpdate(pluginSlug);
     if(isHaveUpdate){

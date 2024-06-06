@@ -1,6 +1,7 @@
 export const config: ISettingConfig = {
   experiment: {
     disable_auto_update: false,
+    output_compFunc: false,
   },
 }
 
@@ -10,4 +11,5 @@ export interface ISettingConfig {
 
 export interface ISettingExperimentConfig {
   disable_auto_update: boolean;
+  output_compFunc: boolean;
 };
