@@ -7,9 +7,11 @@ import { log, logError } from '../utils/log';
 import { BrowserWindow, app, dialog } from 'electron';
 import outputChangeLogJs from '../utils/outputChangeLogJs';
 import { config } from '../config/config';
+import mirror from '../utils/mirror';
+import buildUrl from '../utils/buildUrl';
 
-const githubRawMirror = 'https://raw.gitmirror.com/';
-const githubReleaseMirror = 'https://mirror.ghproxy.com/';
+const githubRawMirror = 'https://raw.gitmirror.com';
+const githubReleaseMirror = 'https://mirror.ghproxy.com';
 const pluginSlug = 'LiteLoaderQQNT_CheckUpdateModule';
 
 const typesMap: Map<string, (currentVersion: string, targetVersion: string) => boolean> = new Map();
@@ -34,7 +36,8 @@ globalThis.LiteLoader.api.checkUpdate = async (slug: string, type?: string): Pro
     if(!compFunc) return false;
 
     const currentVer = targetPluginManifest.version;
-    const remoteManifest: ILiteLoaderManifestConfig = await (await fetch(`${githubRawMirror}${targetPluginManifest.repository.repo}/${targetPluginManifest.repository.branch}/manifest.json`)).json();
+    const url = mirror('domain', buildUrl('raw', targetPluginManifest.repository.repo, targetPluginManifest.repository.branch, undefined, 'manifest.json'), githubRawMirror);
+    const remoteManifest: ILiteLoaderManifestConfig = await (await fetch(url)).json();
     const targetVer = remoteManifest.version;
 
     return compFunc(currentVer, targetVer);
@@ -45,7 +48,6 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
   log('downloadUpdate starts');
 
   const targetPluginManifest = await LiteLoader.plugins[slug].manifest;
-  const remoteManifest: ILiteLoaderManifestConfig = await (await fetch(`${githubRawMirror}${targetPluginManifest.repository!.repo}/${targetPluginManifest.repository!.branch}/manifest.json`)).json();
   let isSourceCode = false;
 
   if(!targetPluginManifest.repository){
@@ -53,12 +55,15 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
     return null;
   }
 
+  const mirrorUrl = mirror('domain', buildUrl('raw', targetPluginManifest.repository.repo, targetPluginManifest.repository.branch, undefined, 'manifest.json'), githubRawMirror);
+  const remoteManifest: ILiteLoaderManifestConfig = await (await fetch(mirrorUrl)).json();
+
   if(!url){
     if(targetPluginManifest.repository.release && targetPluginManifest.repository.release.file){
-      url = `${githubReleaseMirror}https://github.com/${targetPluginManifest.repository.repo}/releases/download/${remoteManifest!.repository!.release!.tag}/${remoteManifest!.repository!.release!.file}`;
+      url = mirror('total', buildUrl('release', targetPluginManifest.repository.repo, undefined, remoteManifest!.repository!.release!.tag, remoteManifest!.repository!.release!.file), githubReleaseMirror);
     }
     else{
-      url = `${githubReleaseMirror}https://github.com/${targetPluginManifest.repository.repo}/archive/refs/heads/${targetPluginManifest.repository.branch}.zip`;
+      url = mirror('total', buildUrl('code', targetPluginManifest.repository.repo, targetPluginManifest.repository.branch), githubReleaseMirror);
       isSourceCode = true;
     }
   }
