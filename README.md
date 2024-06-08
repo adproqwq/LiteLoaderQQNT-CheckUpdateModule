@@ -20,10 +20,11 @@
 3. 重启QQNT即可
 
 ## 鸣谢
-* [LiteLoaderQQNT](https://github.com/LiteLoaderQQNT/LiteLoaderQQNT/)
-* [LiteLoaderQQNT-PluginTemplate-Vite](https://github.com/MisaLiu/LiteLoaderQQNT-PluginTemplate-Vite/)
-* [LiteLoaderQQNT-lite_tools](https://github.com/xiyuesaves/LiteLoaderQQNT-lite_tools/)
-* [Protocio](https://github.com/PRO-2684/protocio/)
+* [LiteLoaderQQNT](https://github.com/LiteLoaderQQNT/LiteLoaderQQNT/) - 提供框架
+* [LiteLoaderQQNT-PluginTemplate-Vite](https://github.com/MisaLiu/LiteLoaderQQNT-PluginTemplate-Vite/) - 提供模板
+* [LiteLoaderQQNT-lite_tools](https://github.com/xiyuesaves/LiteLoaderQQNT-lite_tools/) - 下载插件代码借鉴
+* [Protocio](https://github.com/PRO-2684/protocio/) - 提供部分代码思路
+* [list-viewer](https://github.com/ltxhhz/LL-plugin-list-viewer/) - 提供用户镜像处理思路
 
 ## License
 ```
