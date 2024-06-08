@@ -9,9 +9,8 @@ import outputChangeLogJs from '../utils/outputChangeLogJs';
 import { config } from '../config/config';
 import mirror from '../utils/mirror';
 import buildUrl from '../utils/buildUrl';
+import getMirrorSettings from '../utils/getMirrorSettings';
 
-const githubRawMirror = 'https://raw.gitmirror.com';
-const githubReleaseMirror = 'https://mirror.ghproxy.com';
 const pluginSlug = 'LiteLoaderQQNT_CheckUpdateModule';
 
 const typesMap: Map<string, (currentVersion: string, targetVersion: string) => boolean> = new Map();
@@ -36,7 +35,8 @@ globalThis.LiteLoader.api.checkUpdate = async (slug: string, type?: string): Pro
     if(!compFunc) return false;
 
     const currentVer = targetPluginManifest.version;
-    const url = mirror('domain', buildUrl('raw', targetPluginManifest.repository.repo, targetPluginManifest.repository.branch, undefined, 'manifest.json'), githubRawMirror);
+    const [mirrorType, mirrorDomain] = await getMirrorSettings();
+    const url = mirror(mirrorType, buildUrl('raw', targetPluginManifest.repository.repo, targetPluginManifest.repository.branch, undefined, 'manifest.json'), mirrorDomain);
     const remoteManifest: ILiteLoaderManifestConfig = await (await fetch(url)).json();
     const targetVer = remoteManifest.version;
 
@@ -55,15 +55,16 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
     return null;
   }
 
-  const mirrorUrl = mirror('domain', buildUrl('raw', targetPluginManifest.repository.repo, targetPluginManifest.repository.branch, undefined, 'manifest.json'), githubRawMirror);
+  const [mirrorType, mirrorDomain] = await getMirrorSettings();
+  const mirrorUrl = mirror(mirrorType, buildUrl('raw', targetPluginManifest.repository.repo, targetPluginManifest.repository.branch, undefined, 'manifest.json'), mirrorDomain);
   const remoteManifest: ILiteLoaderManifestConfig = await (await fetch(mirrorUrl)).json();
 
   if(!url){
     if(targetPluginManifest.repository.release && targetPluginManifest.repository.release.file){
-      url = mirror('total', buildUrl('release', targetPluginManifest.repository.repo, undefined, remoteManifest!.repository!.release!.tag, remoteManifest!.repository!.release!.file), githubReleaseMirror);
+      url = mirror(mirrorType, buildUrl('release', targetPluginManifest.repository.repo, undefined, remoteManifest!.repository!.release!.tag, remoteManifest!.repository!.release!.file), mirrorDomain);
     }
     else{
-      url = mirror('total', buildUrl('code', targetPluginManifest.repository.repo, targetPluginManifest.repository.branch), githubReleaseMirror);
+      url = mirror(mirrorType, buildUrl('code', targetPluginManifest.repository.repo, targetPluginManifest.repository.branch), mirrorDomain);
       isSourceCode = true;
     }
   }
@@ -145,8 +146,8 @@ app.whenReady().then(async () => {
   const userConfig = await LiteLoader.api.config.get(pluginSlug, config);
 
   if(userConfig.experiment.output_compFunc){
-    typesMap.forEach((_, types) => {
-      log(`${types} is registered.`);
+    typesMap.forEach((_, type) => {
+      log(`${type} is registered.`);
     });
   }
 
