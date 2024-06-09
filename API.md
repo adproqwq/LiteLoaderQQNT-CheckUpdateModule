@@ -62,7 +62,7 @@ else console.log('更新失败，错误信息已输出至控制台');
 
 该函数用于自定义比较版本号的逻辑，它接受以下的参数：
 
-`type`: `string` - 该种比较方式的名字。插件自带`semVer`和`increase`，下方会分别解释。当多个插件注册同一个`type`时，后注册的将会覆盖前注册的。
+`type`: `string` - 该种比较方式的名字。插件自带`semVer`，下方会解释。当多个插件注册同一个`type`时，后注册的将会覆盖前注册的。
 
 `compFunc`: `(currentVersion: string, targetVersion: string) => boolean` - 比较版本号的逻辑。`currentVersion`是当前版本号，`targetVersion`是待比较版本号。注意：`compFunc`参数不能传入异步函数。
 
@@ -90,16 +90,6 @@ app.whenReady().then(() => {
 该种情况适用此比较方式。
 
 更多信息请见[SemVer官网](https://semver.org/lang/zh-CN/)
-
-### increase
-
-版本号更替方式为递增方式使用。
-
-例：
-```text
-"version": "0" -> "version": "1"
-```
-该种情况适用此比较方式。
 
 ## showRelaunchDialog
 

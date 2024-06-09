@@ -125,11 +125,6 @@ globalThis.LiteLoader.api.showRelaunchDialog = (slug: string, showChangeLog?: bo
 };
 
 const initCompFunc = () => {
-  LiteLoader.api.registerCompFunc('increase', (currentVer, targetVer): boolean => {
-    if(Number(currentVer) < Number(targetVer)) return true;
-    else return false;
-  });
-
   LiteLoader.api.registerCompFunc('semVer', (currentVer, targetVer): boolean => {
     const currentVersionSplitedArray: string[] = currentVer.split('.');
     const targetVersionSplitedArray: string[] = targetVer.split('.');
