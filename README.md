@@ -1,7 +1,9 @@
 # LiteLoaderQQNT-CheckUpdateModule
 
 ## 说明
-为 LiteLoaderQQNT 插件提供一个检测更新的API
+为 LiteLoaderQQNT 插件提供一个检测下载更新的API。
+
+本插件不提供任何交互式API调用方式，仅能在插件代码内调用，即本插件**不是也不会是**插件市场类插件。
 
 ## 使用方法
 
