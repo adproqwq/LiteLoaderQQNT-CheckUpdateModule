@@ -1,15 +1,15 @@
+import { BrowserWindow, app, dialog } from 'electron';
 import fs from 'node:fs';
 import { Readable } from 'node:stream';
 import { finished } from 'node:stream/promises';
 import { ReadableStream } from 'node:stream/web';
 import AdmZip from 'adm-zip';
 import { log, logError } from '../utils/log';
-import { BrowserWindow, app, dialog } from 'electron';
 import outputChangeLogJs from '../utils/outputChangeLogJs';
-import { config } from '../config/config';
 import mirror from '../utils/mirror';
 import buildUrl from '../utils/buildUrl';
 import getMirrorSettings from '../utils/getMirrorSettings';
+import { config } from '../config/config';
 
 const pluginSlug = 'LiteLoaderQQNT_CheckUpdateModule';
 
@@ -20,7 +20,7 @@ globalThis.LiteLoader.api.registerCompFunc = (type: string, compFunc: (currentVe
 };
 
 globalThis.LiteLoader.api.checkUpdate = async (slug: string, type?: string): Promise<boolean | null> => {
-  log('checkUpdate starts');
+  log(`${slug} > checkUpdate starts`);
 
   type = type ? type : 'semVer';
 
@@ -45,7 +45,7 @@ globalThis.LiteLoader.api.checkUpdate = async (slug: string, type?: string): Pro
 };
 
 globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): Promise<boolean | null> => {
-  log('downloadUpdate starts');
+  log(`${slug} > downloadUpdate starts`);
 
   const targetPluginManifest = await LiteLoader.plugins[slug].manifest;
   let isSourceCode = false;
@@ -80,7 +80,7 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
       if(isSourceCode) zip.extractAllTo(`${LiteLoader.path.plugins}/`, true);
       else zip.extractAllTo(`${LiteLoader.plugins[slug].path.plugin}/`, true);
       fs.unlinkSync(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
-      log('Update successfully');
+      log(`${slug} > Update successfully`);
       return true;
     }
     else{
@@ -154,12 +154,8 @@ app.whenReady().then(async () => {
   if(!userConfig.experiment.disable_auto_update){
     const isHaveUpdate = await LiteLoader.api.checkUpdate(pluginSlug);
     if(isHaveUpdate){
-      log('The plugin has updated.');
       const updateResult = await LiteLoader.api.downloadUpdate(pluginSlug);
-      if(updateResult){
-        log('Update successfully.');
-        LiteLoader.api.showRelaunchDialog(pluginSlug, true);
-      }
+      if(updateResult) LiteLoader.api.showRelaunchDialog(pluginSlug, true);
     }
   }
 });
