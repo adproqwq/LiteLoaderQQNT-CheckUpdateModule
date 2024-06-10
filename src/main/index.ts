@@ -4,12 +4,14 @@ import { Readable } from 'node:stream';
 import { finished } from 'node:stream/promises';
 import { ReadableStream } from 'node:stream/web';
 import AdmZip from 'adm-zip';
+import { compare } from 'semver';
 import { log, logError } from '../utils/log';
 import outputChangeLogJs from '../utils/outputChangeLogJs';
 import mirror from '../utils/mirror';
 import buildUrl from '../utils/buildUrl';
 import getMirrorSettings from '../utils/getMirrorSettings';
 import { config } from '../config/config';
+import getLatest from '../github/getLatest';
 
 const pluginSlug = 'LiteLoaderQQNT_CheckUpdateModule';
 
@@ -61,7 +63,8 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
 
   if(!url){
     if(targetPluginManifest.repository.release && targetPluginManifest.repository.release.file){
-      url = mirror(mirrorType, buildUrl('release', targetPluginManifest.repository.repo, undefined, remoteManifest!.repository!.release!.tag, remoteManifest!.repository!.release!.file), mirrorDomain);
+      const tag = remoteManifest!.repository!.release!.tag == 'latest' ? await getLatest(targetPluginManifest.repository.repo) : remoteManifest!.repository!.release!.tag;
+      url = mirror(mirrorType, buildUrl('release', targetPluginManifest.repository.repo, undefined, tag, remoteManifest!.repository!.release!.file), mirrorDomain);
     }
     else{
       url = mirror(mirrorType, buildUrl('code', targetPluginManifest.repository.repo, targetPluginManifest.repository.branch), mirrorDomain);
@@ -126,12 +129,9 @@ globalThis.LiteLoader.api.showRelaunchDialog = (slug: string, showChangeLog?: bo
 
 const initCompFunc = () => {
   LiteLoader.api.registerCompFunc('semVer', (currentVer, targetVer): boolean => {
-    const currentVersionSplitedArray: string[] = currentVer.split('.');
-    const targetVersionSplitedArray: string[] = targetVer.split('.');
-    for(let i = 0, j = 0;i < currentVersionSplitedArray.length, j < targetVersionSplitedArray.length;i++, j++){
-      if(Number(currentVersionSplitedArray[i]) < Number(targetVersionSplitedArray[j])) return true;
-    }
-    return false;
+    const compResult = compare(currentVer, targetVer);
+    if(compResult === -1) return true;
+    else return false;
   });
 };
 

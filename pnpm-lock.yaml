@@ -11,6 +11,9 @@ importers:
       adm-zip:
         specifier: ^0.5.14
         version: 0.5.14
+      semver:
+        specifier: ^7.6.2
+        version: 7.6.2
     devDependencies:
       '@electron-toolkit/eslint-config-ts':
         specifier: ^2.0.0
