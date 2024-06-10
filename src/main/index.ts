@@ -147,8 +147,8 @@ app.whenReady().then(async () => {
   }
 
   if(!userConfig.experiment.disable_auto_update){
-    const isHaveUpdate = await LiteLoader.api.checkUpdate(pluginSlug);
-    if(isHaveUpdate){
+    const isHasUpdate = await LiteLoader.api.checkUpdate(pluginSlug);
+    if(isHasUpdate){
       const updateResult = await LiteLoader.api.downloadUpdate(pluginSlug);
       if(updateResult) LiteLoader.api.showRelaunchDialog(pluginSlug, true);
     }

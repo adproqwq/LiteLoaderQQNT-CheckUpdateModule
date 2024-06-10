@@ -41,6 +41,14 @@ export const onSettingWindowCreated = async (view: HTMLElement) => {
     }
   });
 
+  (view.querySelector('#set_mirror') as HTMLButtonElement).addEventListener('click', () => {
+    LiteLoader.api.openExternal('https://github.com/adproqwq/LiteLoaderQQNT-CheckUpdateModule/blob/main/mirror.md');
+  });
+
+  (view.querySelector('#feedback_mirror') as HTMLButtonElement).addEventListener('click', () => {
+    LiteLoader.api.openExternal('https://github.com/adproqwq/LiteLoaderQQNT-CheckUpdateModule/issues/new?labels=bug&template=bug-report.yaml&title=[Bug]:+');
+  });
+
   (view.querySelector('#api') as HTMLButtonElement).addEventListener('click', () => {
     LiteLoader.api.openExternal('https://github.com/adproqwq/LiteLoaderQQNT-CheckUpdateModule/blob/main/API.md');
   });
