@@ -86,6 +86,7 @@ app.whenReady().then(() => {
 例：
 ```text
 "version": "1.0.0" -> "version": "1.0.1"
+"version": "v1.0.0" -> "version": "v1.0.1"
 ```
 该种情况适用此比较方式。
 

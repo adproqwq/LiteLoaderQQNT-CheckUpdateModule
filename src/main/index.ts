@@ -4,7 +4,7 @@ import { Readable } from 'node:stream';
 import { finished } from 'node:stream/promises';
 import { ReadableStream } from 'node:stream/web';
 import AdmZip from 'adm-zip';
-import { compare } from 'semver';
+import { valid, compare } from 'semver';
 import { log, logError } from '../utils/log';
 import outputChangeLogJs from '../utils/outputChangeLogJs';
 import mirror from '../utils/mirror';
@@ -129,7 +129,7 @@ globalThis.LiteLoader.api.showRelaunchDialog = (slug: string, showChangeLog?: bo
 
 const initCompFunc = () => {
   LiteLoader.api.registerCompFunc('semVer', (currentVer, targetVer): boolean => {
-    const compResult = compare(currentVer, targetVer);
+    const compResult = compare(valid(currentVer)!, valid(targetVer)!);
     if(compResult === -1) return true;
     else return false;
   });
