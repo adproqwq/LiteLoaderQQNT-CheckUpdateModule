@@ -13,7 +13,7 @@
 1. 使用本插件，目标插件**必须**在`manifest.json`中提供`repository`字段，并保证填写信息正确。如不想将源码开源，可以只将manifest上传github，然后自行解决下载更新包的问题即可。
 2. 本插件理论适配Windows、Linux、MacOS，但仅有Windows经过实机测试，Linux、MacOS如不能正常使用，请提Issue。
 3. 使用过程中产生的一切问题，请先确认是 本插件导致的 还是 依赖本插件的插件导致的，后者需要前往对应仓库进行反馈。
-4. 本插件下载Github Release或源码使用镜像，如果出现下载失败，请提Issue反馈。
+4. 本插件下载Github Release或源码使用镜像，如果出现下载失败，请提Issue反馈，并暂时换用其它镜像。
 
 ## 安装方法
 1. 下载最新 [发行版](https://github.com/adproqwq/LiteLoaderQQNT-CheckUpdateModule/releases) 并解压
