@@ -38,7 +38,17 @@ globalThis.LiteLoader.api.checkUpdate = async (slug: string, type?: string): Pro
 
     const currentVer = targetPluginManifest.version;
     const [mirrorType, mirrorDomain] = await getMirrorSettings();
-    const url = mirror(mirrorType, buildUrl('raw', targetPluginManifest.repository.repo, targetPluginManifest.repository.branch, undefined, 'manifest.json'), mirrorDomain);
+    const url = mirror(
+      mirrorType,
+      buildUrl(
+        'raw',
+        targetPluginManifest.repository.repo,
+        targetPluginManifest.repository.branch,
+        undefined,
+        'manifest.json'
+      ),
+      mirrorDomain
+    );
     const remoteManifest: ILiteLoaderManifestConfig = await (await fetch(url)).json();
     const targetVer = remoteManifest.version;
 
@@ -58,16 +68,46 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
   }
 
   const [mirrorType, mirrorDomain] = await getMirrorSettings();
-  const mirrorUrl = mirror(mirrorType, buildUrl('raw', targetPluginManifest.repository.repo, targetPluginManifest.repository.branch, undefined, 'manifest.json'), mirrorDomain);
+  const mirrorUrl = mirror(
+    mirrorType,
+    buildUrl(
+      'raw',
+      targetPluginManifest.repository.repo,
+      targetPluginManifest.repository.branch,
+      undefined,
+      'manifest.json'
+    ),
+    mirrorDomain
+  );
   const remoteManifest: ILiteLoaderManifestConfig = await (await fetch(mirrorUrl)).json();
 
   if(!url){
     if(targetPluginManifest.repository.release && targetPluginManifest.repository.release.file){
-      const tag = remoteManifest!.repository!.release!.tag == 'latest' ? await getLatest(targetPluginManifest.repository.repo) : remoteManifest!.repository!.release!.tag;
-      url = mirror(mirrorType, buildUrl('release', targetPluginManifest.repository.repo, undefined, tag, remoteManifest!.repository!.release!.file), mirrorDomain);
+      let tag: string;
+      if(remoteManifest!.repository!.release!.tag == 'latest') tag = await getLatest(targetPluginManifest.repository.repo);
+      else tag = remoteManifest!.repository!.release!.tag;
+      url = mirror(
+        mirrorType,
+        buildUrl(
+          'release',
+          targetPluginManifest.repository.repo,
+          undefined,
+          tag,
+          remoteManifest!.repository!.release!.file
+        ),
+        mirrorDomain
+      );
     }
     else{
-      url = mirror(mirrorType, buildUrl('code', targetPluginManifest.repository.repo, targetPluginManifest.repository.branch), mirrorDomain);
+      url = mirror(
+        mirrorType,
+        buildUrl(
+          'code',
+          targetPluginManifest.repository.repo,
+          targetPluginManifest.repository.branch
+        ),
+        mirrorDomain
+      );
       isSourceCode = true;
     }
   }
