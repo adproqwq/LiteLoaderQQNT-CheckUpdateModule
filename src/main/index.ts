@@ -147,10 +147,8 @@ app.whenReady().then(async () => {
   }
 
   if(!userConfig.experiment.disable_auto_update){
-    const isHasUpdate = await LiteLoader.api.checkUpdate(pluginSlug);
-    if(isHasUpdate){
-      const updateResult = await LiteLoader.api.downloadUpdate(pluginSlug);
-      if(updateResult) LiteLoader.api.showRelaunchDialog(pluginSlug, true);
+    if(await LiteLoader.api.checkUpdate(pluginSlug)){
+      if(await LiteLoader.api.downloadUpdate(pluginSlug)) LiteLoader.api.showRelaunchDialog(pluginSlug, true);
     }
   }
 });
