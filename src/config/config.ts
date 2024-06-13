@@ -20,6 +20,6 @@ export interface ISettingExperimentConfig {
 };
 
 export interface ISettingMirrorConfig {
-  type: 'total' | 'domain';
+  type: 'total' | 'domain' | 'off';
   domain: string;
 };

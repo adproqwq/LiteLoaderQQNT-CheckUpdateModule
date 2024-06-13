@@ -8,7 +8,7 @@ v1.4.0 开放用户镜像配置，该配置为实验性，暂不支持在QQ中�
 
 镜像配置位于插件配置文件中`experiment`下的`mirror`配置项
 
-`mirror`配置接受一个对象，对象中应包含`type`和`domain`两个配置。
+`mirror`配置接受一个对象，对象中应包含`type`、`domain`和`off`三个配置。
 
 这是默认的配置：
 
@@ -23,7 +23,7 @@ mirror: {
 
 ### type
 
-`type`接受`total`或`domain`之一的值。
+`type`接受`total`或`domain`或`off`之一的值。
 
 `total`指镜像链接的使用方式是在github源链接的基础上添加镜像域名。
 
@@ -41,6 +41,8 @@ mirror: {
 
 则镜像链接为：https://mirror.example.com/1234/1234.md
 
+`off`则不使用镜像，直连github。当`type`为`off`时，`domain`的设置将被无视。
+
 ### domain
 
 `domain`接受一个`string`类型的值。
@@ -48,3 +50,5 @@ mirror: {
 值的内容应为一个包含`协议`与`完整域名`的url。
 
 需要注意的是：url的结尾不要带上`/`字符，否则将无法正确拼接镜像url。
+
+当`type`为`off`时，该值将被无视，无论填写什么，都不会起效。

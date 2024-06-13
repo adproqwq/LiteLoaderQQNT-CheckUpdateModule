@@ -1,6 +1,6 @@
 import { config } from '../config/config';
 
-export default async (): Promise<['total' | 'domain', string]> => {
+export default async (): Promise<['total' | 'domain' | 'off', string]> => {
   const pluginSlug = 'LiteLoaderQQNT_CheckUpdateModule';
 
   const userConfig = await LiteLoader.api.config.get(pluginSlug, config);

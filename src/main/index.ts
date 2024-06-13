@@ -15,9 +15,9 @@ import getLatest from '../github/getLatest';
 
 const pluginSlug = 'LiteLoaderQQNT_CheckUpdateModule';
 
-const typesMap: Map<string, (currentVersion: string, targetVersion: string) => boolean> = new Map();
+const typesMap: Map<string, (currentVer: string, targetVer: string) => boolean> = new Map();
 
-globalThis.LiteLoader.api.registerCompFunc = (type: string, compFunc: (currentVersion: string, targetVersion: string) => boolean) => {
+globalThis.LiteLoader.api.registerCompFunc = (type: string, compFunc: (currentVer: string, targetVer: string) => boolean) => {
   typesMap.set(type, compFunc);
 };
 

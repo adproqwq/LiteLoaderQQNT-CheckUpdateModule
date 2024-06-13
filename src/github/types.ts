@@ -18,13 +18,10 @@ export interface ITagsAPIResponse {
    * tag 提交信息
    */
   commit: {
-    /**
-     * sha
-     */
     sha: string;
 
     /**
-     * tag 对应提交的 diff
+     * tag 对应提交的 diff的 url
      */
     url: string;
   };
