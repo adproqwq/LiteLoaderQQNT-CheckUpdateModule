@@ -127,11 +127,11 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
       return true;
     }
     else{
-      logError('Github proxy has some wrong. Retry later.');
+      logError('Github proxy has some wrong. Try to close your VPN or disable the github proxy.');
       return false;
     }
   } catch(err){
-    logError(`Download update zip failed. Error log: ${err}`);
+    logError(`Download plugin failed. Error log: ${err}`);
     return false;
   }
 };
