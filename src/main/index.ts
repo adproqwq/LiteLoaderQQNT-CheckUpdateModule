@@ -144,25 +144,19 @@ globalThis.LiteLoader.api.showRelaunchDialog = (slug: string, showChangeLog?: bo
     cancelId: 1,
     defaultId: 0,
   };
+  const callback = (c: Electron.MessageBoxReturnValue) => {
+    if(c.response == 0){
+      app.relaunch();
+      app.exit();
+    }
+  };
   if(showChangeLog){
     const relaunchWindow = new BrowserWindow();
     outputChangeLogJs(slug, changeLogFile ? changeLogFile : 'changeLog');
     relaunchWindow.loadFile(`${LiteLoader.plugins[pluginSlug].path.plugin}/assets/changeLog.html`);
-    dialog.showMessageBox(relaunchWindow, options).then((c) => {
-      if(c.response == 0){
-        app.relaunch();
-        app.exit();
-      }
-    });
+    dialog.showMessageBox(relaunchWindow, options).then((c) => callback(c));
   }
-  else{
-    dialog.showMessageBox(options).then((c) => {
-      if(c.response == 0){
-        app.relaunch();
-        app.exit();
-      }
-    });
-  }
+  else dialog.showMessageBox(options).then((c) => callback(c));
 };
 
 const initCompFunc = () => {
