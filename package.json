@@ -1,6 +1,6 @@
 {
   "name": "liteloaderqqnt-check-update-module",
-  "version": "1.4.3",
+  "version": "1.5.0",
   "description": "为LiteLoaderQQNT插件提供一个检测更新的API",
   "main": "index.js",
   "scripts": {
@@ -16,6 +16,7 @@
     "@types/adm-zip": "^0.5.5",
     "@types/eslint__eslintrc": "^2.1.1",
     "@types/eslint__js": "^8.42.3",
+    "@types/ping": "^0.4.4",
     "@typescript-eslint/eslint-plugin": "8.0.0-alpha.14",
     "@typescript-eslint/parser": "8.0.0-alpha.14",
     "electron": "^28.0.0",
@@ -29,6 +30,7 @@
   "packageManager": "pnpm@9.3.0",
   "dependencies": {
     "adm-zip": "^0.5.14",
+    "ping": "^0.4.4",
     "semver": "^7.6.2"
   }
 }

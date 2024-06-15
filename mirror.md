@@ -2,21 +2,24 @@
 
 v1.4.0 开放用户镜像配置，该配置为实验性，暂不支持在QQ中设置，需要在配置文件中修改。以下是简略教程。
 
-目前（v1.4.0）仅支持设置一个镜像。
+~~目前（v1.4.0）仅支持设置一个镜像。~~
+目前（v1.5.0）支持设置多个镜像，设置镜像前请确保该镜像能**同时**代理raw和release文件。
 
 ## 镜像配置格式
 
-镜像配置位于插件配置文件中`experiment`下的`mirror`配置项
+镜像配置位于插件配置文件中`experiment`下的`mirrors`配置项
 
-`mirror`配置接受一个对象，对象中应包含`type`、`domain`和`off`三个配置。
+`mirrors`配置接受一个数组，数组内部可以包含多个对象，对象中应包含`type`、`domain`两个配置。
 
 这是默认的配置：
 
 ```json
-mirror: {
-  type: "total",
-  domain: "https://mirror.ghproxy.com"
-}
+mirrors: [
+  {
+    type: "total",
+    domain: "https://mirror.ghproxy.com"
+  }
+]
 ```
 
 以下是每项的具体说明：
