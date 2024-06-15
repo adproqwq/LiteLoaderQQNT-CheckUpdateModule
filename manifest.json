@@ -4,7 +4,7 @@
   "type": "framework",
   "name": "插件检测更新API",
   "slug": "LiteLoaderQQNT_CheckUpdateModule",
-  "description": "为LiteLoaderQQNT插件提供一个检测更新的API",
+  "description": "为LiteLoaderQQNT插件开发者提供一个插件检测、下载更新的API",
   "icon": "./assets/icon.svg",
   "thumb": "./assets/icon.svg",
   "version": "1.5.0",
