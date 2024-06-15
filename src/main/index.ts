@@ -1,7 +1,6 @@
 import { BrowserWindow, app, dialog } from 'electron';
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
 import { Readable } from 'node:stream';
-import { finished } from 'node:stream/promises';
 import { ReadableStream } from 'node:stream/web';
 import AdmZip from 'adm-zip';
 import { valid, compare } from 'semver';
@@ -117,12 +116,11 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
   try{
     const res = await fetch(url);
     if(res.status === 200){
-      const fileStream = fs.createWriteStream(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`, { flags: 'w' });
-      await finished(Readable.fromWeb(res.body! as ReadableStream<any>).pipe(fileStream));
+      await fs.writeFile(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`, Readable.fromWeb(res.body! as ReadableStream<any>));
       const zip = new AdmZip(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
       if(isSourceCode) zip.extractAllTo(`${LiteLoader.path.plugins}/`, true);
       else zip.extractAllTo(`${LiteLoader.plugins[slug].path.plugin}/`, true);
-      fs.unlinkSync(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
+      await fs.rm(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
       log(`${slug} > Update successfully`);
       return true;
     }
