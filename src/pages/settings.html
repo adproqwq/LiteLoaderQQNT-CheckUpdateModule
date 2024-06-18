@@ -1,4 +1,4 @@
-<setting-section data-title="实验性选项">
+<setting-section data-title="实验性">
   <setting-panel>
     <setting-list data-direction="column">
       <setting-item>
@@ -21,6 +21,13 @@
           <setting-text data-type="secondary">实验性选项，需要你的反馈</setting-text>
           <setting-button id="set_mirror" data-type="secondary">如何配置</setting-button>
           <setting-button id="feedback_mirror" data-type="secondary">反馈</setting-button>
+        </div>
+      </setting-item>
+      <setting-item>
+        <div>
+          <setting-text>重启QQNT</setting-text>
+          <setting-text data-type="secondary">重启QQNT，该功能为实验性功能，随时可能删除</setting-text>
+          <setting-button id="relaunch" data-type="secondary">重启QQNT</setting-button>
         </div>
       </setting-item>
     </setting-list>
@@ -53,6 +60,7 @@
         <div>
           <setting-text>版本号</setting-text>
           <setting-text id="pluginVersion" data-type="secondary"></setting-text>
+          <setting-button id="check_update" data-type="secondary">检测更新</setting-button>
         </div>
       </setting-item>
     </setting-list>

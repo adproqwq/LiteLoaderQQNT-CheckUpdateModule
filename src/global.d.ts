@@ -1,5 +1,10 @@
 /// <reference types="vite/client" />
 
+declare namespace LLCUM {
+  const checkThisUpdate: () => void;
+  const relaunchQQNT: () => void;
+};
+
 declare interface ILiteLoaderManifestConfig {
   manifest_version: 4;
 

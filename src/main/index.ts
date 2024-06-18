@@ -1,4 +1,4 @@
-import { BrowserWindow, app, dialog } from 'electron';
+import { BrowserWindow, app, dialog, ipcMain } from 'electron';
 import fs from 'node:fs/promises';
 import { Readable } from 'node:stream';
 import { ReadableStream } from 'node:stream/web';
@@ -183,4 +183,22 @@ app.whenReady().then(async () => {
       if(await LiteLoader.api.downloadUpdate(pluginSlug)) LiteLoader.api.showRelaunchDialog(pluginSlug, true);
     }
   }
+});
+
+ipcMain.on('LLCUM.checkThisUpdate', async () => {
+  if(await LiteLoader.api.checkUpdate(pluginSlug)){
+    if(await LiteLoader.api.downloadUpdate(pluginSlug)) LiteLoader.api.showRelaunchDialog(pluginSlug, true);
+  }
+  else{
+    dialog.showMessageBox({
+      title: '插件无更新',
+      message: '插件无更新',
+      type: 'info',
+    });
+  }
+});
+
+ipcMain.on('LLCUM.relaunchQQNT', () => {
+  app.relaunch();
+  app.exit();
 });

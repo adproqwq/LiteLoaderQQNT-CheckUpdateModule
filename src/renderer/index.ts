@@ -4,9 +4,8 @@ export const onSettingWindowCreated = async (view: HTMLElement) => {
   const pluginSlug = 'LiteLoaderQQNT_CheckUpdateModule';
   let userConfig: ISettingConfig = await LiteLoader.api.config.get(pluginSlug, config);
   const pluginPath = LiteLoader.plugins[pluginSlug].path.plugin;
-  const settingsPage = await (await fetch(`local:///${pluginPath}/pages/settings.html`)).text();
 
-  view.innerHTML = settingsPage;
+  view.innerHTML = await (await fetch(`local:///${pluginPath}/pages/settings.html`)).text();
   (view.querySelector('#pluginVersion') as HTMLParagraphElement).innerHTML = LiteLoader.plugins[pluginSlug].manifest.version;
   if(userConfig.experiment.disable_auto_update){
     (view.querySelector('#disable_auto_update') as HTMLInputElement).setAttribute('is-active', '');
@@ -49,11 +48,19 @@ export const onSettingWindowCreated = async (view: HTMLElement) => {
     LiteLoader.api.openExternal('https://github.com/adproqwq/LiteLoaderQQNT-CheckUpdateModule/issues/new?labels=bug&template=bug-report.yaml&title=[Bug]:+');
   });
 
+  (view.querySelector('#relaunch') as HTMLButtonElement).addEventListener('click', () => {
+    LLCUM.relaunchQQNT();
+  });
+
   (view.querySelector('#api') as HTMLButtonElement).addEventListener('click', () => {
     LiteLoader.api.openExternal('https://github.com/adproqwq/LiteLoaderQQNT-CheckUpdateModule/blob/main/API.md');
   });
 
   (view.querySelector('#github') as HTMLButtonElement).addEventListener('click', () => {
     LiteLoader.api.openExternal('https://github.com/adproqwq/LiteLoaderQQNT-CheckUpdateModule');
+  });
+
+  (view.querySelector('#check_update') as HTMLButtonElement).addEventListener('click', () => {
+    LLCUM.checkThisUpdate();
   });
 };
