@@ -5,7 +5,7 @@ import { ReadableStream } from 'node:stream/web';
 import AdmZip from 'adm-zip';
 import { valid, compare } from 'semver';
 import { log, logError } from '../utils/log';
-import outputChangeLogJs from '../utils/outputChangeLogJs';
+import outputChangeLog from '../utils/outputChangeLog';
 import mirror from '../utils/mirror';
 import buildUrl from '../utils/buildUrl';
 import getMirrorSettings from '../utils/getMirrorSettings';
@@ -129,7 +129,7 @@ globalThis.LiteLoader.api.showRelaunchDialog = (slug: string, showChangeLog?: bo
   };
   if(showChangeLog){
     const relaunchWindow = new BrowserWindow();
-    outputChangeLogJs(slug, changeLogFile ? changeLogFile : 'changeLog');
+    outputChangeLog(slug, changeLogFile ? changeLogFile : 'changeLog');
     relaunchWindow.loadFile(`${LiteLoader.plugins[pluginSlug].path.plugin}/assets/changeLog.html`);
     dialog.showMessageBox(relaunchWindow, options).then((c) => callback(c));
   }

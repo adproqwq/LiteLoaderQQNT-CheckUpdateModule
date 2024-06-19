@@ -27,9 +27,10 @@
     "vite-plugin-checker": "^0.6.4",
     "vite-plugin-cp": "^4.0.8"
   },
-  "packageManager": "pnpm@9.3.0",
+  "packageManager": "pnpm@9.4.0",
   "dependencies": {
     "adm-zip": "^0.5.14",
+    "marked": "^13.0.0",
     "ping": "^0.4.4",
     "semver": "^7.6.2"
   }
