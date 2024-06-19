@@ -44,7 +44,7 @@ mirrors: [
 
 则镜像链接为：https://mirror.example.com/1234/1234.md
 
-`off`则不使用镜像，直连github。当`type`为`off`时，`domain`的设置将被无视。
+`off`则不使用镜像，直连github。请确保`off`必须放在数组中的首位，否则`off`将会失效，且该镜像会被无视。当`type`为`off`时，`domain`的设置将被无视。
 
 ### domain
 
@@ -54,4 +54,4 @@ mirrors: [
 
 需要注意的是：url的结尾不要带上`/`字符，否则将无法正确拼接镜像url。
 
-当`type`为`off`时，该值将被无视，无论填写什么，都不会起效。
+当`type`为`off`时，该值将被无视，无论填写什么，都不会起效，但**必须**填写。
