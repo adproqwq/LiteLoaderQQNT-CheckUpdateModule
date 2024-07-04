@@ -17,7 +17,10 @@ const pluginSlug = 'LiteLoaderQQNT_CheckUpdateModule';
 
 const typesMap: Map<string, (currentVer: string, targetVer: string) => boolean> = new Map();
 
-globalThis.LiteLoader.api.registerCompFunc = (type: string, compFunc: (currentVer: string, targetVer: string) => boolean) => {
+globalThis.LiteLoader.api.registerCompFunc = (type: string, compFunc: (currentVer: string, targetVer: string) => boolean, force?: boolean) => {
+  if(typesMap.get(type)){
+    if(!force) return;
+  }
   typesMap.set(type, compFunc);
 };
 
@@ -142,7 +145,7 @@ const initCompFunc = () => {
     const compResult = compare(valid(currentVer)!, valid(targetVer)!);
     if(compResult === -1) return true;
     else return false;
-  });
+  }, true);
 };
 
 app.whenReady().then(async () => {

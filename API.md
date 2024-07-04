@@ -66,6 +66,8 @@ else console.log('更新失败，错误信息已输出至控制台');
 
 `compFunc`: `(currentVersion: string, targetVersion: string) => boolean` - 比较版本号的逻辑。`currentVersion`是当前版本号，`targetVersion`是待比较版本号。注意：`compFunc`参数不能传入异步函数。
 
+`force`: `boolean` - 当当前注册的比较方式已存在时，是否覆盖注册。`true`为覆盖原比较方式，`false`为跳过当前注册。默认为`false`。
+
 它的返回值类型为：`void`
 
 使用方法：
@@ -75,7 +77,7 @@ app.whenReady().then(() => {
   LiteLoader.api.registerCompFunc('type', (currentVer, targetVer): boolean => {
     if(Number(currentVer) < Number(targetVer)) return true; // 返回true，则为有更新
     else return false; // 返回false，则无更新
-  });
+  }, true);
 });
 ```
 
