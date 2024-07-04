@@ -4,6 +4,7 @@ import { Readable } from 'node:stream';
 import { ReadableStream } from 'node:stream/web';
 import AdmZip from 'adm-zip';
 import { valid, compare } from 'semver';
+import picocolors from 'picocolors';
 import { log, logError } from '../utils/log';
 import outputChangeLog from '../utils/outputChangeLog';
 import mirror from '../utils/mirror';
@@ -21,14 +22,14 @@ globalThis.LiteLoader.api.registerCompFunc = (type: string, compFunc: (currentVe
 };
 
 globalThis.LiteLoader.api.checkUpdate = async (slug: string, type?: string): Promise<boolean | null> => {
-  log(`${slug} > checkUpdate starts`);
+  log(picocolors.cyan(`${slug} > checkUpdate starts`));
 
   type = type ? type : 'semVer';
 
   const targetPluginManifest = await LiteLoader.plugins[slug].manifest;
 
   if(!targetPluginManifest.repository){
-    logError(`No repository is found in the manifest of ${slug}`);
+    logError(picocolors.red(`No repository is found in the manifest of ${slug}`));
     return null;
   }
   else{
@@ -50,13 +51,13 @@ globalThis.LiteLoader.api.checkUpdate = async (slug: string, type?: string): Pro
 };
 
 globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): Promise<boolean | null> => {
-  log(`${slug} > downloadUpdate starts`);
+  log(picocolors.cyan(`${slug} > downloadUpdate starts`));
 
   const targetPluginManifest = await LiteLoader.plugins[slug].manifest;
   let isSourceCode = false;
 
   if(!targetPluginManifest.repository){
-    logError(`No repository is found in the manifest of ${slug}`);
+    logError(picocolors.red(`No repository is found in the manifest of ${slug}`));
     return null;
   }
 
@@ -98,15 +99,15 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
       if(isSourceCode) zip.extractAllTo(`${LiteLoader.path.plugins}/`, true);
       else zip.extractAllTo(`${LiteLoader.plugins[slug].path.plugin}/`, true);
       await fs.rm(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
-      log(`${slug} > Update successfully`);
+      log(picocolors.cyan(`${slug} > Update successfully`));
       return true;
     }
     else{
-      logError('Github proxy has some wrong. Try to close your VPN or disable the github proxy.');
+      logError(picocolors.red('Github proxy has some wrong. Try to close your VPN or disable the github proxy.'));
       return false;
     }
   } catch(err){
-    logError(`Download plugin failed. Error log: ${err}`);
+    logError(picocolors.red(`Download plugin failed. Error log: ${err}`));
     return false;
   }
 };
@@ -151,7 +152,7 @@ app.whenReady().then(async () => {
 
   if(userConfig.experiment.output_compFunc){
     typesMap.forEach((_, type) => {
-      log(`${type} is registered.`);
+      log(picocolors.cyan(`${type} is registered.`));
     });
   }
 
