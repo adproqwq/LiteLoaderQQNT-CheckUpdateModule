@@ -113,3 +113,21 @@ if(await LiteLoaderQQNT.api.downloadUpdate('your_slug', 'your_update_url(optiona
   LiteLoaderQQNT.api.showRelaunchDialog('your_slug', true, 'your_changelog_file_name(optional)');
 }
 ```
+
+## useMirrors
+
+该函数用于自定义检测、下载时使用的镜像，它接受以下的参数：
+
+`slug`: `string` - 插件`slug`
+
+`mirrors`: `array` - 镜像数组。具体格式及说明见[mirror.md](./mirror.md)
+
+它的返回值类型为：`void`
+
+使用方法：
+```js
+// main.js
+app.whenReady().then(() => {
+  LiteLoader.api.useMirrors('slug', mirrorsArray);
+});
+```

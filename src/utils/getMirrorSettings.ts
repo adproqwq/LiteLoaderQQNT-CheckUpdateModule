@@ -1,16 +1,15 @@
-import { config } from '../config/config';
+import { ISettingMirrorConfig } from '../config/config';
 import ping from 'ping';
 
-export default async (): Promise<['total' | 'domain' | 'off', string]> => {
-  const pluginSlug = 'LiteLoaderQQNT_CheckUpdateModule';
+export default async (slug: string, mirrorsMap: Map<string, ISettingMirrorConfig[]>): Promise<['total' | 'domain' | 'off', string]> => {
+  const mirrors = mirrorsMap.get(slug);
+  const defaultDomain = 'https://example.com';
 
-  const userConfig = await LiteLoader.api.config.get(pluginSlug, config);
+  if(!mirrors || mirrors[0].type == 'off') return ['off', defaultDomain];
 
-  if(userConfig.experiment.mirrors[0].type == 'off') return ['off', userConfig.experiment.mirrors[0].domain];
+  const pingResult: Map<number, number> = new Map();
 
-  let pingResult: Map<number, number> = new Map();
-
-  userConfig.experiment.mirrors.forEach(async (m, i) => {
+  mirrors.forEach(async (m, i) => {
     if(m.type == 'off') return;
 
     const host = new URL(m.domain).host;
@@ -25,5 +24,5 @@ export default async (): Promise<['total' | 'domain' | 'off', string]> => {
     }
   });
 
-  return [userConfig.experiment.mirrors[index].type, userConfig.experiment.mirrors[index].domain];
+  return [mirrors[index].type, mirrors[index].domain];
 };

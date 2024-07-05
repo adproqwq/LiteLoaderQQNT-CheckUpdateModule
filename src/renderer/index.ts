@@ -48,6 +48,10 @@ export const onSettingWindowCreated = async (view: HTMLElement) => {
     LiteLoader.api.openExternal('https://github.com/adproqwq/LiteLoaderQQNT-CheckUpdateModule/issues/new?labels=bug&template=bug-report.yaml&title=[Bug]:+');
   });
 
+  (view.querySelector('#get_mirror') as HTMLButtonElement).addEventListener('click', () => {
+    LLCUM.mirrorsChange();
+  });
+
   (view.querySelector('#relaunch') as HTMLButtonElement).addEventListener('click', () => {
     LLCUM.relaunchQQNT();
   });

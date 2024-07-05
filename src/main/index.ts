@@ -10,18 +10,23 @@ import outputChangeLog from '../utils/outputChangeLog';
 import mirror from '../utils/mirror';
 import buildUrl from '../utils/buildUrl';
 import getMirrorSettings from '../utils/getMirrorSettings';
-import { config } from '../config/config';
+import { config, ISettingMirrorConfig } from '../config/config';
 import getLatest from '../github/getLatest';
 
 const pluginSlug = 'LiteLoaderQQNT_CheckUpdateModule';
 
 const typesMap: Map<string, (currentVer: string, targetVer: string) => boolean> = new Map();
+const mirrorsMap: Map<string, ISettingMirrorConfig[]> = new Map();
 
 globalThis.LiteLoader.api.registerCompFunc = (type: string, compFunc: (currentVer: string, targetVer: string) => boolean, force?: boolean) => {
   if(typesMap.get(type)){
     if(!force) return;
   }
   typesMap.set(type, compFunc);
+};
+
+globalThis.LiteLoader.api.useMirrors = (slug: string, mirrors: ISettingMirrorConfig[]) => {
+  mirrorsMap.set(slug, mirrors);
 };
 
 globalThis.LiteLoader.api.checkUpdate = async (slug: string, type?: string): Promise<boolean | null> => {
@@ -40,7 +45,8 @@ globalThis.LiteLoader.api.checkUpdate = async (slug: string, type?: string): Pro
     if(!compFunc) return false;
 
     const currentVer = targetPluginManifest.version;
-    const [mirrorType, mirrorDomain] = await getMirrorSettings();
+    const [mirrorType, mirrorDomain] = await getMirrorSettings(slug, mirrorsMap);
+    log(picocolors.cyan(`${slug} > Use ${mirrorDomain} mirror`));
     const url = mirror(mirrorType, buildUrl('raw', {
       repo: targetPluginManifest.repository.repo,
       branch: targetPluginManifest.repository.branch,
@@ -64,7 +70,8 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
     return null;
   }
 
-  const [mirrorType, mirrorDomain] = await getMirrorSettings();
+  const [mirrorType, mirrorDomain] = await getMirrorSettings(slug, mirrorsMap);
+  log(picocolors.cyan(`${slug} > Use ${mirrorDomain} mirror`));
   const mirrorUrl = mirror(mirrorType, buildUrl('raw', {
     repo: targetPluginManifest.repository.repo,
     branch: targetPluginManifest.repository.branch,
@@ -140,16 +147,18 @@ globalThis.LiteLoader.api.showRelaunchDialog = (slug: string, showChangeLog?: bo
   else dialog.showMessageBox(options).then((c) => callback(c));
 };
 
-const initCompFunc = () => {
+const init = () => {
   LiteLoader.api.registerCompFunc('semVer', (currentVer, targetVer): boolean => {
     const compResult = compare(valid(currentVer)!, valid(targetVer)!);
     if(compResult === -1) return true;
     else return false;
   }, true);
+
+  LiteLoader.api.useMirrors(pluginSlug, config.experiment.mirrors);
 };
 
 app.whenReady().then(async () => {
-  initCompFunc();
+  init();
 
   const userConfig = await LiteLoader.api.config.get(pluginSlug, config);
 
@@ -182,4 +191,9 @@ ipcMain.on('LLCUM.checkThisUpdate', async () => {
 ipcMain.on('LLCUM.relaunchQQNT', () => {
   app.relaunch();
   app.exit();
+});
+
+ipcMain.on('LLCUM.mirrorsChange', async () => {
+  const userConfig = await LiteLoader.api.config.get(pluginSlug, config);
+  LiteLoader.api.useMirrors(pluginSlug, userConfig.experiment.mirrors);
 });

@@ -6,5 +6,8 @@ contextBridge.exposeInMainWorld('LLCUM', {
   },
   relaunchQQNT: () => {
     ipcRenderer.send('LLCUM.relaunchQQNT');
-  }
+  },
+  mirrorsChange: () => {
+    ipcRenderer.send('LLCUM.mirrorsChange');
+  },
 });

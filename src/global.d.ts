@@ -3,6 +3,7 @@
 declare namespace LLCUM {
   const checkThisUpdate: () => void;
   const relaunchQQNT: () => void;
+  const mirrorsChange: () => void;
 };
 
 declare interface ILiteLoaderManifestConfig {
@@ -58,6 +59,11 @@ declare interface ILiteLoaderManifestAuthorsConfig {
 
   link: string;
 }
+
+declare interface ILLCUMMirror {
+  type: 'total' | 'domain' | 'off';
+  domain: string;
+};
 
 declare namespace LiteLoader {
   const path: ILiteLoaderPath;
@@ -120,6 +126,7 @@ declare namespace LiteLoader {
     openExternal: (url: string) => void,
     disablePlugin: (slug: string) => void,
     registerCompFunc: (type: string, compFunc: (currentVer: string, targetVer: string) => boolean, force?: boolean) => void,
+    useMirrors: (slug: string, mirrors: ILLCUMMirror[]) => void,
     checkUpdate: (slug: string, type?: string) => Promise<boolean | null>,
     downloadUpdate: (slug: string, url?: string) => Promise<boolean | null>,
     showRelaunchDialog: (slug: string, showChangeLog?: boolean, changeLogFile?: string) => void,
