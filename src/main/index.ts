@@ -147,18 +147,18 @@ globalThis.LiteLoader.api.showRelaunchDialog = (slug: string, showChangeLog?: bo
   else dialog.showMessageBox(options).then((c) => callback(c));
 };
 
-const init = () => {
+const init = async () => {
   LiteLoader.api.registerCompFunc('semVer', (currentVer, targetVer): boolean => {
     const compResult = compare(valid(currentVer)!, valid(targetVer)!);
     if(compResult === -1) return true;
     else return false;
   }, true);
 
-  LiteLoader.api.useMirrors(pluginSlug, config.experiment.mirrors);
+  LiteLoader.api.useMirrors(pluginSlug, (await LiteLoader.api.config.get(pluginSlug, config)).experiment.mirrors);
 };
 
 app.whenReady().then(async () => {
-  init();
+  await init();
 
   const userConfig = await LiteLoader.api.config.get(pluginSlug, config);
 
