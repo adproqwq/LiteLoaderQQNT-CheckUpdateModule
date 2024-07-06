@@ -121,7 +121,7 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
   }
 };
 
-globalThis.LiteLoader.api.showRelaunchDialog = (slug: string, showChangeLog?: boolean, changeLogFile?: string) => {
+globalThis.LiteLoader.api.showRelaunchDialog = async (slug: string, showChangeLog?: boolean, changeLogFile?: string) => {
   const pluginName = LiteLoader.plugins[slug].manifest.name;
   const options: Electron.MessageBoxOptions = {
     title: '插件已更新，需要重启',
@@ -139,7 +139,7 @@ globalThis.LiteLoader.api.showRelaunchDialog = (slug: string, showChangeLog?: bo
   };
   if(showChangeLog){
     const relaunchWindow = new BrowserWindow();
-    outputChangeLog(slug, changeLogFile ? changeLogFile : 'changeLog');
+    await outputChangeLog(slug, changeLogFile ? changeLogFile : 'changeLog');
     relaunchWindow.loadFile(`${LiteLoader.plugins[pluginSlug].path.plugin}/assets/changeLog.html`);
     dialog.showMessageBox(relaunchWindow, options).then((c) => callback(c));
   }

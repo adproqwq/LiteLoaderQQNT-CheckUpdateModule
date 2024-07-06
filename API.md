@@ -96,6 +96,8 @@ app.whenReady().then(() => {
 
 ## showRelaunchDialog
 
+该函数是一个`异步函数`。
+
 该函数用于更新后弹出重启弹窗，并展示更新日志，它接受以下的参数：
 
 `slug`: `string` - 需要展示更新日志的插件的slug
@@ -110,7 +112,7 @@ app.whenReady().then(() => {
 ```js
 // main.js
 if(await LiteLoaderQQNT.api.downloadUpdate('your_slug', 'your_update_url(optional)')){
-  LiteLoaderQQNT.api.showRelaunchDialog('your_slug', true, 'your_changelog_file_name(optional)');
+  await LiteLoaderQQNT.api.showRelaunchDialog('your_slug', true, 'your_changelog_file_name(optional)');
 }
 ```
 
