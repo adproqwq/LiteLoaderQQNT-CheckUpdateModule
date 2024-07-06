@@ -7,9 +7,8 @@ import { valid, compare } from 'semver';
 import picocolors from 'picocolors';
 import { log, logError } from '../utils/log';
 import outputChangeLog from '../utils/outputChangeLog';
-import mirror from '../utils/mirror';
+import { getMirror, mirrorParse } from '../utils/mirror';
 import buildUrl from '../utils/buildUrl';
-import getMirrorSettings from '../utils/getMirrorSettings';
 import { config, ISettingMirrorConfig } from '../config/config';
 import getLatest from '../github/getLatest';
 
@@ -45,9 +44,9 @@ globalThis.LiteLoader.api.checkUpdate = async (slug: string, type?: string): Pro
     if(!compFunc) return false;
 
     const currentVer = targetPluginManifest.version;
-    const [mirrorType, mirrorDomain] = await getMirrorSettings(slug, mirrorsMap);
+    const [mirrorType, mirrorDomain] = await getMirror(slug, mirrorsMap);
     log(picocolors.cyan(`${slug} > Use ${mirrorDomain} mirror`));
-    const url = mirror(mirrorType, buildUrl('raw', {
+    const url = mirrorParse(mirrorType, buildUrl('raw', {
       repo: targetPluginManifest.repository.repo,
       branch: targetPluginManifest.repository.branch,
       file: 'manifest.json',
@@ -70,9 +69,9 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
     return null;
   }
 
-  const [mirrorType, mirrorDomain] = await getMirrorSettings(slug, mirrorsMap);
+  const [mirrorType, mirrorDomain] = await getMirror(slug, mirrorsMap);
   log(picocolors.cyan(`${slug} > Use ${mirrorDomain} mirror`));
-  const mirrorUrl = mirror(mirrorType, buildUrl('raw', {
+  const mirrorUrl = mirrorParse(mirrorType, buildUrl('raw', {
     repo: targetPluginManifest.repository.repo,
     branch: targetPluginManifest.repository.branch,
     file: 'manifest.json',
@@ -84,14 +83,14 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
       let tag: string;
       if(remoteManifest!.repository!.release!.tag == 'latest') tag = await getLatest(targetPluginManifest.repository.repo);
       else tag = remoteManifest!.repository!.release!.tag;
-      url = mirror(mirrorType, buildUrl('release', {
+      url = mirrorParse(mirrorType, buildUrl('release', {
         repo: targetPluginManifest.repository.repo,
         tag: tag,
         file: remoteManifest!.repository!.release!.file,
       }), mirrorDomain);
     }
     else{
-      url = mirror(mirrorType, buildUrl('code', {
+      url = mirrorParse(mirrorType, buildUrl('code', {
         repo: targetPluginManifest.repository.repo,
         branch: targetPluginManifest.repository.branch,
       }), mirrorDomain);
