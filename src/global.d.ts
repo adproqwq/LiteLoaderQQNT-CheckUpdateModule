@@ -129,7 +129,7 @@ declare namespace LiteLoader {
     useMirrors: (slug: string, mirrors: ILLCUMMirror[]) => void,
     checkUpdate: (slug: string, type?: string) => Promise<boolean | null>,
     downloadUpdate: (slug: string, url?: string) => Promise<boolean | null>,
-    showRelaunchDialog: (slug: string, showChangeLog?: boolean, changeLogFile?: string) => void,
+    showRelaunchDialog: (slug: string, showChangeLog?: boolean, changeLogFile?: string) => Promise<void>,
     config: ILiteLoaderAPIConfig,
   }
 

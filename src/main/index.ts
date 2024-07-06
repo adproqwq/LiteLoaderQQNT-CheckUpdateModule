@@ -169,7 +169,7 @@ app.whenReady().then(async () => {
 
   if(!userConfig.experiment.disable_auto_update){
     if(await LiteLoader.api.checkUpdate(pluginSlug)){
-      if(await LiteLoader.api.downloadUpdate(pluginSlug)) LiteLoader.api.showRelaunchDialog(pluginSlug, true);
+      if(await LiteLoader.api.downloadUpdate(pluginSlug)) await LiteLoader.api.showRelaunchDialog(pluginSlug, true);
     }
   }
 });

@@ -1,6 +1,6 @@
 {
   "name": "liteloaderqqnt-check-update-module",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "为LiteLoaderQQNT插件提供一个检测更新的API",
   "main": "index.js",
   "scripts": {
