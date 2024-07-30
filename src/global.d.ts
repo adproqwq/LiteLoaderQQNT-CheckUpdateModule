@@ -122,6 +122,7 @@ declare namespace LiteLoader {
     plugin: ILiteLoaderAPIPlugin,
     registerCompFunc: (type: string, compFunc: (currentVer: string, targetVer: string) => boolean, force?: boolean) => void,
     useMirrors: (slug: string, mirrors: ILLCUMMirror[]) => void,
+    setMinLoaderVer: (slug:string, minLLVersion: string) => void,
     checkUpdate: (slug: string, type?: string) => Promise<boolean | null>,
     downloadUpdate: (slug: string, url?: string) => Promise<boolean | null>,
     showRelaunchDialog: (slug: string, showChangeLog?: boolean, changeLogFile?: string) => Promise<void>,

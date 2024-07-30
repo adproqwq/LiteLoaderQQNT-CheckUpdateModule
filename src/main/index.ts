@@ -9,7 +9,7 @@ import { log, logError } from '../utils/log';
 import outputChangeLog from '../utils/outputChangeLog';
 import { getMirror, mirrorParse } from '../utils/mirror';
 import buildUrl from '../utils/buildUrl';
-import isNewLL from '../utils/isNewLL';
+import checkLLVersion from '../utils/checkLLVersion';
 import { config, ISettingMirrorConfig } from '../config/config';
 import getLatest from '../github/getLatest';
 
@@ -17,6 +17,7 @@ const pluginSlug = 'LiteLoaderQQNT_CheckUpdateModule';
 
 const typesMap: Map<string, (currentVer: string, targetVer: string) => boolean> = new Map();
 const mirrorsMap: Map<string, ISettingMirrorConfig[]> = new Map();
+const minLLVerMap: Map<string, string> = new Map();
 
 globalThis.LiteLoader.api.registerCompFunc = (type: string, compFunc: (currentVer: string, targetVer: string) => boolean, force?: boolean) => {
   if(typesMap.get(type)){
@@ -27,6 +28,10 @@ globalThis.LiteLoader.api.registerCompFunc = (type: string, compFunc: (currentVe
 
 globalThis.LiteLoader.api.useMirrors = (slug: string, mirrors: ISettingMirrorConfig[]) => {
   mirrorsMap.set(slug, mirrors);
+};
+
+globalThis.LiteLoader.api.setMinLoaderVer = (slug: string, minLLVersion: string) => {
+  minLLVerMap.set(slug, minLLVersion);
 };
 
 globalThis.LiteLoader.api.checkUpdate = async (slug: string, type?: string): Promise<boolean | null> => {
@@ -43,6 +48,10 @@ globalThis.LiteLoader.api.checkUpdate = async (slug: string, type?: string): Pro
   else{
     const compFunc = typesMap.get(type);
     if(!compFunc) return false;
+
+    if(minLLVerMap.get(slug)){
+      if(!checkLLVersion(minLLVerMap.get(slug)!)) return false;
+    }
 
     const currentVer = targetPluginManifest.version;
     const [mirrorType, mirrorDomain] = await getMirror(slug, mirrorsMap);
@@ -112,7 +121,7 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
       }
       if(isZipExist) await fs.rm(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
       await fs.writeFile(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`, Readable.fromWeb(res.body! as ReadableStream<any>));
-      if(isNewLL() && !isSourceCode){
+      if(checkLLVersion('1.2.0') && !isSourceCode){
         LiteLoader.api.plugin.install(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
         log(picocolors.cyan(`${slug} > LL 1.2.0 API.`));
       }

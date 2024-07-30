@@ -5,6 +5,8 @@
 - `downloadUpdate`
 - `registerCompFunc`
 - `showRelaunchDialog`
+- `useMirrors`
+- `setMinLoaderVer`
 
 如无特殊说明，本插件所有函数均暴露在主进程。
 
@@ -131,5 +133,23 @@ if(await LiteLoaderQQNT.api.downloadUpdate('your_slug', 'your_update_url(optiona
 // main.js
 app.whenReady().then(() => {
   LiteLoader.api.useMirrors('slug', mirrorsArray);
+});
+```
+
+## setMinLoaderVer
+
+该函数用于限定以后更新所需的最低`LiteLoaderQQNT`框架版本，它接受以下的参数：
+
+`slug`: `string` - 插件`slug`
+
+`minLLVersion`: `string` - 以后所需的最低`LiteLoaderQQNT`版本
+
+它的返回值类型为：`void`
+
+使用方法：
+```js
+// main.js
+app.whenReady().then(() => {
+  LiteLoader.api.setMinLoaderVer('slug', '1.2.0');
 });
 ```
