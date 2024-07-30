@@ -9,10 +9,12 @@ export const config: ISettingConfig = {
       },
     ],
   },
+  needToShowChangeLog: [],
 };
 
 export interface ISettingConfig {
-  experiment: ISettingExperimentConfig
+  experiment: ISettingExperimentConfig;
+  needToShowChangeLog: string[];
 };
 
 export interface ISettingExperimentConfig {

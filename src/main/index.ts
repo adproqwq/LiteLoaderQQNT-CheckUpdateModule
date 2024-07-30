@@ -123,6 +123,9 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
       await fs.writeFile(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`, Readable.fromWeb(res.body! as ReadableStream<any>));
       if(checkLLVersion('1.2.0') && !isSourceCode){
         LiteLoader.api.plugin.install(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
+        const userConfig = await LiteLoader.api.config.get(pluginSlug, config);
+        userConfig.needToShowChangeLog.push(slug);
+        await LiteLoader.api.config.set(pluginSlug, userConfig);
         log(picocolors.cyan(`${slug} > LL 1.2.0 API.`));
       }
       else{
@@ -148,7 +151,7 @@ globalThis.LiteLoader.api.showRelaunchDialog = async (slug: string, showChangeLo
   const pluginName = LiteLoader.plugins[slug].manifest.name;
   const options: Electron.MessageBoxOptions = {
     title: '插件已更新，需要重启',
-    message: `${pluginName} 插件已更新，需要重启。${showChangeLog ? '更新日志在打开的窗口中。' : ''}`,
+    message: `${pluginName} 插件已更新，需要重启。`,
     type: 'warning',
     buttons: ['现在重启', '稍后自行重启'],
     cancelId: 1,
@@ -161,12 +164,27 @@ globalThis.LiteLoader.api.showRelaunchDialog = async (slug: string, showChangeLo
     }
   };
   if(showChangeLog){
-    const relaunchWindow = new BrowserWindow();
-    await outputChangeLog(slug, changeLogFile ? changeLogFile : 'changeLog');
-    relaunchWindow.loadFile(`${LiteLoader.plugins[pluginSlug].path.plugin}/assets/changeLog.html`);
-    dialog.showMessageBox(relaunchWindow, options).then((c) => callback(c));
+    if(!checkLLVersion('1.2.0')){
+      const relaunchWindow = new BrowserWindow();
+      await outputChangeLog(slug, changeLogFile ? changeLogFile : 'changeLog');
+      relaunchWindow.loadFile(`${LiteLoader.plugins[pluginSlug].path.plugin}/assets/changeLog.html`);
+      dialog.showMessageBox(relaunchWindow, options).then((c) => callback(c));
+    }
+    else{
+      const userConfig = await LiteLoader.api.config.get(pluginSlug, config);
+      const index = userConfig.needToShowChangeLog.indexOf(slug);
+      userConfig.needToShowChangeLog[index] = `${userConfig.needToShowChangeLog[index]},${changeLogFile ? changeLogFile : 'changeLog'}`;
+      await LiteLoader.api.config.set(pluginSlug, userConfig);
+      dialog.showMessageBox(options).then((c) => callback(c));
+    }
   }
-  else dialog.showMessageBox(options).then((c) => callback(c));
+  else{
+    const userConfig = await LiteLoader.api.config.get(pluginSlug, config);
+    const index = userConfig.needToShowChangeLog.indexOf(slug);
+    userConfig.needToShowChangeLog.splice(index, 1);
+    await LiteLoader.api.config.set(pluginSlug, userConfig);
+    dialog.showMessageBox(options).then((c) => callback(c));
+  }
 };
 
 const init = async () => {
@@ -177,12 +195,28 @@ const init = async () => {
   }, true);
 
   LiteLoader.api.useMirrors(pluginSlug, (await LiteLoader.api.config.get(pluginSlug, config)).experiment.mirrors);
+
+  LiteLoader.api.setMinLoaderVer(pluginSlug, '1.2.0');
 };
 
 app.whenReady().then(async () => {
   await init();
 
   const userConfig = await LiteLoader.api.config.get(pluginSlug, config);
+
+  if(checkLLVersion('1.2.0')){
+    userConfig.needToShowChangeLog.forEach(async (plugin) => {
+      const slug = plugin.split(',')[0];
+      const changeLogFile = plugin.split(',')[1];
+      const changeLogWindow = new BrowserWindow({
+        title: `${LiteLoader.plugins[slug].manifest.name} 更新日志`,
+      });
+      await outputChangeLog(slug, changeLogFile);
+      changeLogWindow.loadFile(`${LiteLoader.plugins[pluginSlug].path.plugin}/assets/changeLog.html`);
+    });
+  }
+  userConfig.needToShowChangeLog = [];
+  await LiteLoader.api.config.set(pluginSlug, userConfig);
 
   if(userConfig.experiment.output_compFunc){
     typesMap.forEach((_, type) => {
