@@ -29,7 +29,6 @@
   },
   "packageManager": "pnpm@9.4.0",
   "dependencies": {
-    "adm-zip": "^0.5.14",
     "marked": "^13.0.2",
     "picocolors": "^1.0.1",
     "ping": "^0.4.4",

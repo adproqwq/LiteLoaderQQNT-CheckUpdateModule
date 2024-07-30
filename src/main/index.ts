@@ -2,7 +2,6 @@ import { BrowserWindow, app, dialog, ipcMain } from 'electron';
 import fs from 'node:fs/promises';
 import { Readable } from 'node:stream';
 import { ReadableStream } from 'node:stream/web';
-import AdmZip from 'adm-zip';
 import { valid, compare } from 'semver';
 import picocolors from 'picocolors';
 import { log, logError } from '../utils/log';
@@ -72,7 +71,6 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
   log(picocolors.cyan(`${slug} > downloadUpdate starts`));
 
   const targetPluginManifest = await LiteLoader.plugins[slug].manifest;
-  let isSourceCode = false;
 
   if(!targetPluginManifest.repository){
     logError(picocolors.red(`No repository is found in the manifest of ${slug}`));
@@ -100,11 +98,8 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
       }), mirrorDomain);
     }
     else{
-      url = mirrorParse(mirrorType, buildUrl('code', {
-        repo: targetPluginManifest.repository.repo,
-        branch: targetPluginManifest.repository.branch,
-      }), mirrorDomain);
-      isSourceCode = true;
+      logError(picocolors.red('No release package.'));
+      return false;
     }
   }
 
@@ -121,18 +116,15 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
       }
       if(isZipExist) await fs.rm(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
       await fs.writeFile(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`, Readable.fromWeb(res.body! as ReadableStream<any>));
-      if(checkLLVersion('1.2.0') && !isSourceCode){
+      if(checkLLVersion('1.2.0')){
         LiteLoader.api.plugin.install(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
         const userConfig = await LiteLoader.api.config.get(pluginSlug, config);
         userConfig.needToShowChangeLog.push(slug);
         await LiteLoader.api.config.set(pluginSlug, userConfig);
-        log(picocolors.cyan(`${slug} > LL 1.2.0 API.`));
       }
       else{
-        const zip = new AdmZip(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
-        if(isSourceCode) zip.extractAllTo(`${LiteLoader.path.plugins}/`, true);
-        else zip.extractAllTo(`${LiteLoader.plugins[slug].path.plugin}/`, true);
-        log(picocolors.cyan(`${slug} > Plugin Method.`));
+        logError(picocolors.red('LiteLoaderQQNT version is too low.'));
+        return false;
       }
       log(picocolors.cyan(`${slug} > Update successfully`));
       return true;
@@ -164,18 +156,16 @@ globalThis.LiteLoader.api.showRelaunchDialog = async (slug: string, showChangeLo
     }
   };
   if(showChangeLog){
-    if(!checkLLVersion('1.2.0')){
-      const relaunchWindow = new BrowserWindow();
-      await outputChangeLog(slug, changeLogFile ? changeLogFile : 'changeLog');
-      relaunchWindow.loadFile(`${LiteLoader.plugins[pluginSlug].path.plugin}/assets/changeLog.html`);
-      dialog.showMessageBox(relaunchWindow, options).then((c) => callback(c));
-    }
-    else{
+    if(checkLLVersion('1.2.0')){
       const userConfig = await LiteLoader.api.config.get(pluginSlug, config);
       const index = userConfig.needToShowChangeLog.indexOf(slug);
       userConfig.needToShowChangeLog[index] = `${userConfig.needToShowChangeLog[index]},${changeLogFile ? changeLogFile : 'changeLog'}`;
       await LiteLoader.api.config.set(pluginSlug, userConfig);
       dialog.showMessageBox(options).then((c) => callback(c));
+    }
+    else{
+      logError(picocolors.red('LiteLoaderQQNT version is too low.'));
+      return;
     }
   }
   else{
