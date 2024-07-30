@@ -4,7 +4,7 @@ declare namespace LLCUM {
   const checkThisUpdate: () => void;
   const relaunchQQNT: () => void;
   const mirrorsChange: () => void;
-};
+}
 
 declare interface ILiteLoaderManifestConfig {
   manifest_version: 4;
@@ -63,18 +63,13 @@ declare interface ILiteLoaderManifestAuthorsConfig {
 declare interface ILLCUMMirror {
   type: 'total' | 'domain' | 'off';
   domain: string;
-};
+}
 
 declare namespace LiteLoader {
   const path: ILiteLoaderPath;
   const versions: ILiteLoaderVersion;
   const os: ILiteLoaderOS;
   const package: ILiteLoaderPackage;
-  const config: {
-    LiteLoader: {
-      disabled_plugins: string[],
-    }
-  };
   const plugins: Record<string, ILiteLoaderPlugin>;
   const api: ILiteLoaderAPI;
 
@@ -124,13 +119,19 @@ declare namespace LiteLoader {
   interface ILiteLoaderAPI {
     openPath: (path: string) => void,
     openExternal: (url: string) => void,
-    disablePlugin: (slug: string) => void,
+    plugin: ILiteLoaderAPIPlugin,
     registerCompFunc: (type: string, compFunc: (currentVer: string, targetVer: string) => boolean, force?: boolean) => void,
     useMirrors: (slug: string, mirrors: ILLCUMMirror[]) => void,
     checkUpdate: (slug: string, type?: string) => Promise<boolean | null>,
     downloadUpdate: (slug: string, url?: string) => Promise<boolean | null>,
     showRelaunchDialog: (slug: string, showChangeLog?: boolean, changeLogFile?: string) => Promise<void>,
     config: ILiteLoaderAPIConfig,
+  }
+
+  interface ILiteLoaderAPIPlugin {
+    install: (file_path: string, undone = false) => boolean,
+    delete: (slug: string, delete_data = false, undone = false) => true | void,
+    disable: (slug: string, undone = false) => void,
   }
 
   interface ILiteLoaderAPIConfig {

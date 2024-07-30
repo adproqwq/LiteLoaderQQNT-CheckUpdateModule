@@ -9,6 +9,7 @@ import { log, logError } from '../utils/log';
 import outputChangeLog from '../utils/outputChangeLog';
 import { getMirror, mirrorParse } from '../utils/mirror';
 import buildUrl from '../utils/buildUrl';
+import isNewLL from '../utils/isNewLL';
 import { config, ISettingMirrorConfig } from '../config/config';
 import getLatest from '../github/getLatest';
 
@@ -98,16 +99,29 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
     }
   }
 
-  const splitedUrl = url.split('/');
-  const zipName = splitedUrl[splitedUrl.length - 1];
+  const zipName = `${slug}.zip`;
   try{
     const res = await fetch(url);
     if(res.status === 200){
+      let isZipExist = true;
+      try{
+        await fs.access(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
+      }
+      catch{
+        isZipExist = false;
+      }
+      if(isZipExist) await fs.rm(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
       await fs.writeFile(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`, Readable.fromWeb(res.body! as ReadableStream<any>));
-      const zip = new AdmZip(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
-      if(isSourceCode) zip.extractAllTo(`${LiteLoader.path.plugins}/`, true);
-      else zip.extractAllTo(`${LiteLoader.plugins[slug].path.plugin}/`, true);
-      await fs.rm(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
+      if(isNewLL() && !isSourceCode){
+        LiteLoader.api.plugin.install(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
+        log(picocolors.cyan(`${slug} > LL 1.2.0 API.`));
+      }
+      else{
+        const zip = new AdmZip(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
+        if(isSourceCode) zip.extractAllTo(`${LiteLoader.path.plugins}/`, true);
+        else zip.extractAllTo(`${LiteLoader.plugins[slug].path.plugin}/`, true);
+        log(picocolors.cyan(`${slug} > Plugin Method.`));
+      }
       log(picocolors.cyan(`${slug} > Update successfully`));
       return true;
     }
