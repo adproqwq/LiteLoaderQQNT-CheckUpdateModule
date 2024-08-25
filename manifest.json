@@ -20,9 +20,9 @@
     "darwin"
   ],
   "injects": {
-    "main": "./main/index.js",
-    "preload": "./preload/index.js",
-    "renderer": "./renderer/index.js"
+    "main": "./output/main/index.js",
+    "preload": "./output/preload/index.js",
+    "renderer": "./output/renderer/index.js"
   },
   "repository": {
     "repo": "adproqwq/LiteLoaderQQNT-CheckUpdateModule",

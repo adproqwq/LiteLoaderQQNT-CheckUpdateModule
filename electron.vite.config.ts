@@ -31,7 +31,7 @@ const ConfigBuilder = (type: 'main' | 'preload') => defineViteConfig({
   ],
   build: {
     minify: true,
-    outDir: resolve(OUTPUT_DIR, `./${type}`),
+    outDir: resolve(OUTPUT_DIR, `./output/${type}`),
     lib: {
       entry: resolve(SRC_DIR, `./${type}/index.ts`),
       formats: [ 'cjs' ],
@@ -58,6 +58,7 @@ export default defineConfig({
           { src: './manifest.json', dest: 'dist' },
           { src: './changeLog.md', dest: 'dist' },
           { src: './API.md', dest: 'dist' },
+          { src: './mirror.md', dest: 'dist' },
           { src: './assets', dest: 'dist/assets' },
           { src: './src/pages', dest: 'dist/pages' },
         ],
@@ -69,7 +70,7 @@ export default defineConfig({
     ],
     build: {
       minify: 'esbuild',
-      outDir: resolve(OUTPUT_DIR, './renderer'),
+      outDir: resolve(OUTPUT_DIR, './output/renderer'),
       lib: {
         entry: resolve(SRC_DIR, './renderer/index.ts'),
         formats: [ 'es' ],

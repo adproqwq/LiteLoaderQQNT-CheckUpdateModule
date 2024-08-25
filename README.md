@@ -12,14 +12,22 @@
 请查看[API文档](./API.md)
 
 ## 注意事项
-1. 使用本插件，目标插件**必须**在`manifest.json`中提供`repository`字段，并保证填写信息正确。如不想将源码开源，可以只将manifest上传github，然后自行解决下载更新包的问题即可。
+1. 使用本插件，目标插件**必须**在`manifest.json`中提供`repository`字段，并保证填写信息正确。如不想将源码开源，可以只将manifest上传Github，然后在Release中手动上传插件压缩包，或者自行提供下载链接即可。
 2. 本插件理论适配Windows、Linux、MacOS，但仅有Windows经过实机测试，Linux、MacOS如不能正常使用，请提Issue。
 3. 使用过程中产生的一切问题，请先确认是 本插件导致的 还是 依赖本插件的插件导致的，后者需要前往对应仓库进行反馈。
-4. 本插件下载Github Release或源码使用镜像，如果出现下载失败，请提Issue反馈，并暂时换用其它镜像或关闭镜像。
+4. 本插件下载Github Release使用镜像，如果出现下载失败，请提Issue反馈，并暂时换用其它镜像或关闭镜像。
+5. 本插件没有针对类似源码包的文件结构（即多层文件夹嵌套）的处理逻辑，请确保压缩包的文件结构正确。
 
 ## 安装方法
+
+### 手动安装
 1. 下载最新 [发行版](https://github.com/adproqwq/LiteLoaderQQNT-CheckUpdateModule/releases) 并解压
 2. 将文件夹移动至 `LiteLoaderQQNT数据目录/plugins/` 下面
+3. 重启QQNT即可
+
+### 插件商店类插件自动安装
+1. 找到本插件，执行安装操作
+2. 如可以选择包的来源，请选择`Release包`。若无该选择，请确保其下载的是`Release包`
 3. 重启QQNT即可
 
 ## 鸣谢

@@ -33,10 +33,8 @@ globalThis.LiteLoader.api.setMinLoaderVer = (slug: string, minLLVersion: string)
   minLLVerMap.set(slug, minLLVersion);
 };
 
-globalThis.LiteLoader.api.checkUpdate = async (slug: string, type?: string): Promise<boolean | null> => {
+globalThis.LiteLoader.api.checkUpdate = async (slug: string, type: string = 'semVer'): Promise<boolean | null> => {
   log(picocolors.cyan(`${slug} > checkUpdate starts`));
-
-  type = type ? type : 'semVer';
 
   const targetPluginManifest = await LiteLoader.plugins[slug].manifest;
 
@@ -98,7 +96,7 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
       }), mirrorDomain);
     }
     else{
-      logError(picocolors.red('No release package.'));
+      logError(picocolors.red('No release info in the manifest.'));
       return false;
     }
   }
@@ -110,8 +108,7 @@ globalThis.LiteLoader.api.downloadUpdate = async (slug: string, url?: string): P
       let isZipExist = true;
       try{
         await fs.access(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
-      }
-      catch{
+      } catch{
         isZipExist = false;
       }
       if(isZipExist) await fs.rm(`${LiteLoader.plugins[pluginSlug].path.data}/${zipName}`);
