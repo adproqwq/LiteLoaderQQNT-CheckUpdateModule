@@ -11,27 +11,25 @@
   "author": "Adpro",
   "license": "GPL-3.0-only",
   "devDependencies": {
-    "@electron-toolkit/eslint-config-ts": "^2.0.0",
-    "@electron-toolkit/tsconfig": "^1.0.1",
-    "@types/adm-zip": "^0.5.5",
-    "@types/eslint__eslintrc": "^2.1.2",
-    "@types/eslint__js": "^8.42.3",
+    "@electron-toolkit/eslint-config-ts": "^3.1.0",
+    "@electron-toolkit/tsconfig": "^2.0.0",
+    "@types/adm-zip": "^0.5.8",
     "@types/ping": "^0.4.4",
-    "@typescript-eslint/eslint-plugin": "8.2.0",
-    "@typescript-eslint/parser": "8.2.0",
-    "electron": "^32.0.1",
-    "electron-vite": "^2.3.0",
-    "eslint": "^9.9.1",
-    "unplugin-zip-pack": "1.0.3-beta.0",
-    "vite": "^5.4.2",
-    "vite-plugin-checker": "^0.7.2",
-    "vite-plugin-cp": "^4.0.8"
+    "@typescript-eslint/eslint-plugin": "8.57.1",
+    "@typescript-eslint/parser": "8.57.1",
+    "electron": "^41.0.3",
+    "electron-vite": "^5.0.0",
+    "eslint": "^10.1.0",
+    "unplugin-zip-pack": "1.0.3",
+    "vite": "^8.0.1",
+    "vite-plugin-checker": "^0.12.0",
+    "vite-plugin-cp": "^6.0.3"
   },
-  "packageManager": "pnpm@9.4.0",
+  "packageManager": "pnpm@10.32.1",
   "dependencies": {
-    "marked": "^14.0.0",
-    "picocolors": "^1.0.1",
-    "ping": "^0.4.4",
-    "semver": "^7.6.3"
+    "marked": "^17.0.5",
+    "picocolors": "^1.1.1",
+    "ping": "^1.0.0",
+    "semver": "^7.7.4"
   }
 }
